@@ -69,9 +69,4 @@ L'obiettivo di questo progetto è sviluppare un'applicazione Android in **Kotlin
 - Simulazioni disponibili per la creazione e modifica dei menù.
 - Carte di credito valide: numeri che iniziano con *1*.
 
----
-
-## Note Finali
-- Eventuali aggiornamenti del progetto saranno comunicati agli studenti.
-- Gli studenti devono adeguare i propri sviluppi alla versione più recente del documento.
 
