@@ -52,6 +52,7 @@ const globalStyles = StyleSheet.create({
     color: '#FFFFFF', // Testo bianco
     fontSize: 16,
     fontWeight: 'bold',
+    fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
   },
   buttonSecondary: {
     borderColor: '#004AAD', // Blu outline

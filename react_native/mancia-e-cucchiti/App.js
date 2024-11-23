@@ -1,75 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import StorageManager from './services/StorageManager.js';
-import Menu from './screens/Menu.js';
-import Profile from './screens/Profile.js';
-import OrderState from './screens/OrderState.js';
-import Orders from './screens/Orders.js';
-import Details from './screens/Details.js';
+import Menu from './screens/menu';
+import Profile from './screens/Profile';
+import OrderState from './screens/OrderState';
+import Orders from './screens/Orders';
+import Details from './screens/Details';
 
 import { useState } from 'react';
+import globalStyles from './styles/global.js';
 
 
 export default function App() {
   const [screen, setScreen] = useState('menu');
 
-  const val = Math.floor(Math.random() * 5);
-    if (val === 0) {
-      setScreen('menu');
-    }
-    if (val === 1) {
-      setScreen('profile');
-    }
-    if (val === 2) {
-      setScreen('orderstate');
-    }
-    if (val === 3) {
-      setScreen('orders');
-    }
-    if (val === 4) {
-      setScreen('details');
-    }
+  const changeScreen = (screen) => {
+    console.log("going to screen", screen);
+    alert("grande agneee sei passatta alla schermata " + screen);
+    setScreen(screen);
+} 
+
   if (screen === 'menu') {
     return (
-      <Menu />
-    ); 
-  }
-  if (screen === 'profile') {
+      <View style={globalStyles.container}> 
+        <Menu onButtonPressed={() => changeScreen("details")} />
+      </View>
+    );
+  }else if (screen === 'details') {
     return (
-      <Profile />
-    ); 
-  }
-  if (screen === 'orderstate') {
-    return (
-      <OrderState />
-    ); 
-  }
-  if (screen === 'orders') {
-    return (
-      <Orders />
-    ); 
-  }
-  if (screen === 'details') {
-    return (
-      <Details />
-    ); 
+      <View style={globalStyles.container}> 
+        <Details onButtonPressed={() => changeScreen("menu")} />
+      </View>
+    );
   }
   
-
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-
-    </View>
-  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
