@@ -1,9 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, Button} from 'react-native';
-import globalStyles from '../styles/global.js';
+import globalStyles from '../../styles/global.js';
 import { useEffect } from 'react';
 
-export default function Profile() {
+export default function Orders() {
     let intervalId;
     onLoad = () => {
         console.log("Componente montato");

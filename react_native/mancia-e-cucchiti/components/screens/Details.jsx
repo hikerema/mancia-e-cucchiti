@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, Button, TouchableOpacity} from 'react-native';
-import globalStyles from '../styles/global.js';
+import globalStyles from '../../styles/global.js';
 import { useEffect } from 'react';
 
 export default function Details(props) {

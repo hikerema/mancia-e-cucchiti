@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
 import StorageManager from './services/StorageManager.js';
-import Menu from './screens/menu';
-import Profile from './screens/Profile';
-import OrderState from './screens/OrderState';
-import Orders from './screens/Orders';
-import Details from './screens/Details';
+import Menu from './components/screens/Menu';
+import Profile from './components/screens/Profile';
+import OrderState from './components/screens/OrderState';
+import Orders from './components/screens/Orders';
+import Details from './components/screens/Details';
 
 import { useState } from 'react';
 import globalStyles from './styles/global.js';
@@ -21,7 +21,7 @@ export default function App() {
 
   if (screen === 'menu') {
     return (
-      <View style={globalStyles.container}> 
+      <View style={[globalStyles.backgroundLight]}> 
         <Menu onButtonPressed={() => changeScreen("details")} />
       </View>
     );
