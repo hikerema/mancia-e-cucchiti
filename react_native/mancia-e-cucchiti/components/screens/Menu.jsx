@@ -4,7 +4,6 @@ import globalStyles from '../../styles/global.js';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import MenuItem from '../MenuItem.jsx';
-import BottomNavBar from '../BottomNavBar.jsx';
 
 const BASE_URL = "https://develop.ewlab.di.unimi.it/mc/2425";
 const SID = getSid();
@@ -65,7 +64,7 @@ export default function Menu(props) {
     }, []);
   
     return (
-      <View style={[globalStyles.container, globalStyles.backgroundLight]}>
+      <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>
         <StatusBar style="auto"/>
         <Text style={globalStyles.textScreenTitle}>Menù</Text>
         <FlatList

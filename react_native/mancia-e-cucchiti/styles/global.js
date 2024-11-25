@@ -5,8 +5,13 @@ const globalStyles = StyleSheet.create({
   // Container principale
   container: {
     flex: 1,
+    fontFamily: 'Avenir',
+  },
+
+  screenContainer: {
+    flex: 1,
     paddingHorizontal: 25,
-    paddingTop: 30,
+    paddingTop: 50,
     fontFamily: 'Avenir',
   },
 
@@ -156,33 +161,18 @@ const globalStyles = StyleSheet.create({
     padding: 10,
   },
 
-  navBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+  navbar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 60,
-    backgroundColor: '#ffffff',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-    zIndex: 10, // Forza la visibilità sopra altri elementi
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4, // Migliore ombra su Android
-  },
-  navButton: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#fff',
+    paddingVertical: 20,
+    borderTopColor: '#333',
+    borderTopWidth: 0.3,
   },
   navText: {
+    color: '333',
     fontSize: 16,
-    color: '#333',
     fontWeight: 'bold',
   },
 });
