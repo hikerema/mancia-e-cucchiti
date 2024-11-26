@@ -6,13 +6,13 @@ const Navbar = ({ onNavigate }) => {
   return (
     <View style={globalStyles.navbar}>
       <TouchableOpacity onPress={() => onNavigate('menu')}>
-        <Text style={globalStyles.navText}>Menu</Text>
+        <Text style={globalStyles.navText}>🍕🍔</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => onNavigate('orderds')}>
-        <Text style={globalStyles.navText}>Ordini</Text>
+        <Text style={globalStyles.navText}>📋</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => onNavigate('profile')}>
-        <Text style={globalStyles.navText}>Profilo</Text>
+        <Text style={globalStyles.navText}>🫵🏻</Text>
       </TouchableOpacity>
     </View>
   );

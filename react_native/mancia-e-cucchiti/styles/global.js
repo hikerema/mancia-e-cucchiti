@@ -164,11 +164,11 @@ const globalStyles = StyleSheet.create({
   navbar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center',
     backgroundColor: '#fff',
     paddingVertical: 20,
-    borderTopColor: '#333',
+    borderTopColor: '#ddd',
     borderTopWidth: 0.3,
+    height: 80,
   },
   navText: {
     color: '333',

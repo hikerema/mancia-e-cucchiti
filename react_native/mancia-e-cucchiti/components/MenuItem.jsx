@@ -5,7 +5,6 @@ import globalStyles from '../styles/global.js';
 
 export default function MenuItem({ item, BASE_URL, SID }) {
     const [image, setImage] = useState(null);
-    var suca = "";
 
     const getStoredImageVersion = useCallback(() => {
         // Implementa la logica per ottenere la versione dell'immagine memorizzata
@@ -27,8 +26,7 @@ export default function MenuItem({ item, BASE_URL, SID }) {
                     'Accept': 'application/json'
                 }
             });
-            suca = response.data.base64;
-            setImage(suca);
+            setImage(response.data.base64);
         } catch (error) {
             console.error(error);
             alert("Ci scusiamo, si è verificato un errore durante il recupero dell'immagine");
