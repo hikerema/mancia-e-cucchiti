@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import MenuItem from '../MenuItem.jsx';
 
-const BASE_URL = "https://develop.ewlab.di.unimi.it/mc/2425";
 const SID = getSid();
 const LAT = 45.4784;//implementare la geolocalizzazione
 const LNG = 9.2284;//implementare la geolocalizzazione
@@ -15,29 +14,31 @@ function getSid() {
   return "DDEqyRxxgFmycNWODc6LVIgkY156VkVSDWvjmqCh9ZHhAxmLNxIH9N4zY992f2c4";
 }
 
-export default function Menu(props) {
+export default function Menu({ location, BASE_URL, ...props }) {
     const [menus, setMenus] = useState([]);
+    const [intervalId, setIntervalId] = useState(null);
 
     // Bottom navigation
     const handleHomePress = () => console.log('Home cliccato');
     const handleMenuPress = () => console.log('Menu cliccato');
     const handleProfilePress = () => console.log('Profile cliccato');
 
-    let intervalId;
-    onLoad = () => {
-        console.log("Componente Menù montato");
+    const onLoad = () => {
+      console.log("Componente Menù montato");
+      getMenus();
+      const id = setInterval(() => {
         getMenus();
-        intervalId = setInterval(() => {
-          getMenus();
-        }, 60000);
-    }
+      }, 60000);
+      setIntervalId(id);
+    };
 
-    getMenus = async () => {
+    const getMenus = async () => {
       try {
+        console.log(location);
           const response = await axios.get(BASE_URL + "/menu", {
               params: {
-                  lat: LAT,
-                  lng: LNG,
+                  lat: location["latitude"],
+                  lng: location["longitude"],
                   sid: SID
               },
               headers: {
@@ -50,13 +51,12 @@ export default function Menu(props) {
           console.error(error);
           alert("Ci scusiamo, si è verificato un errore durante il recupero dei menù");
       }
-  }
+    }
   
-    onUnload = () => {
+    const onUnload = () => {
       console.log("Componente Menù smontato");
       clearInterval(intervalId);
-    }
-    
+    };    
     // const 
     useEffect(() => {
       onLoad()

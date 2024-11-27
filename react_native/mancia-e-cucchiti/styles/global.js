@@ -175,6 +175,8 @@ const globalStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+
+
 });
 
 export default globalStyles;
