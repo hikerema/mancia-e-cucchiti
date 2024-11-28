@@ -6,20 +6,20 @@ export default class StorageManager {
     this.db = null; 
   }
 
-  //Metodo asincorno di inizializzazione del database
+  //Metodo asincrono di inizializzazione del database
   //N.B.: Il medodo è stato volutamente non implementato per permetterti di farti capire come funziona,
-    //      all'interno del metodo trovarei i commenti di specifica, che andranno poi rimossi
+    //      all'interno del metodo trovarai i commenti di specifica, che andranno poi rimossi
   async initializeDB() {
     this.db = SQLite.openDatabase('appDatabase'); 
     
-    // a questo punto è necessario creare delle const che contengano le query SQL per la creazione delle tabelle che necessitiamo
-    // quali tabelle necessitiamo? - sicuramente dovremo salvare i dati del utente, che bene o male...
+    // a questo punto è necessario creare delle const che contengano le query SQL per la creazione delle tabelle di cui necessitiamo
+    // di quali tabelle necessitiamo? - sicuramente dovremo salvare i dati del utente, che bene o male...
     // ...sono composti da dati anagrafici (solo quelli obbligatori, che richiede il progetto), dati di pagamento, dati di accesso (SID e UID)
-    // a te la domanda: il sid e l'uid li salviamo del async storage o del db?
+    // a te la domanda: il sid e l'uid li salviamo del async storage o del db? Nel db(?)
     // poi dovremo salvare i dati del applicazione quando va in pausa o in stop, quindi dovremo ragionare ...
-    // ...su come organizzzare questi dati (se in tabelle separate o in un unica tabella), questo vorrei ragionarci insieme
-    // Poi dovremo salvare le immaggini dei menù, il resto dei dati del menù penso che si può tranquillamente richiedere ogni volta al server...
-    // ...per questo dovremo salavre l'mmagine, l'id del menu, e la versione dell'immagine.
+    // ...su come organizzare questi dati (se in tabelle separate o in un unica tabella), questo vorrei ragionarci insieme
+    // Poi dovremo salvare le immagini dei menù, il resto dei dati del menù penso che si può tranquillamente richiedere ogni volta al server...
+    // ...per questo dovremo salvare l'immagine, l'id del menu, e la versione dell'immagine.
     // per ora non mi viene in mente nulla di più, ma se ti viene in mente qualcosa che possiamo salvare, aggiungilo pure
     // le tabelle a cui avevo pensato sono: 
     // - UserProfile: per salvare i dati del utente
@@ -37,7 +37,7 @@ export default class StorageManager {
       ...
     )`;
 
-    //dopo di che evi eseguire la query per creare la tabella, e poi fare la stessa cosa per le altre tabelle
+    //dopo di che devi eseguire la query per creare la tabella, e poi fare la stessa cosa per le altre tabelle
 
     return new Promise((resolve, reject) => {
       this.db.transaction(tx => {
