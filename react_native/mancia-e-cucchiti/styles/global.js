@@ -22,6 +22,9 @@ const globalStyles = StyleSheet.create({
   backgroundDark: {
     backgroundColor: '#1A1A1A', // Sfondo scuro
   },
+  backgroundOrange: {
+    backgroundColor: '#FF6B35', // Arancione
+  },
   
   // Colori di testo
   textPrimary: {

@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "../../assets"
+		},
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../node_modules"
+		},
+		{
+			"path": "../../services"
+		},
+		{
+			"path": "../../styles"
+		}
+	]
+}

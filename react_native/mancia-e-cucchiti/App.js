@@ -56,14 +56,14 @@ export default function App() {
 
   if (screen === 'menu') {
     return (
-      <View style={[globalStyles.container, globalStyles.backgroundLight]}> 
+      <View style={globalStyles.container}> 
         <Menu location={currentLocation} BASE_URL={BASE_URL} onButtonPressed={() => changeScreen("details")} />
         <NavBar onNavigate={changeScreen} />
       </View>
     );
   }else if (screen === 'loading') {
     return (
-      <View style={globalStyles.container}> 
+      <View style={[globalStyles.container, globalStyles.backgroundOrange]}> 
         <Loading />
       </View>
     );
