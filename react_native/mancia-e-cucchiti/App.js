@@ -15,18 +15,18 @@ import * as Location from 'expo-location';
 
 const BASE_URL = "https://develop.ewlab.di.unimi.it/mc/2425";
 
-
-
 export default function App() {
   const [screen, setScreen] = useState('loading');
   const [currentLocation, setCurrentLocation] = useState(null);
 
   useEffect(() => {
-    getCurrentLocation();
-    if (currentLocation !== null) {
-      setScreen('menu');
+    if (screen === 'loading') {
+      getCurrentLocation();
+      if (currentLocation !== null) {
+        setScreen('menu');
+      }
     }
-  });
+  }), [];
 
   const getCurrentLocation = async () => {
     let canUseLocation = false;
