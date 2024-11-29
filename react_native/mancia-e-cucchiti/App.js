@@ -1,5 +1,7 @@
 import { View } from 'react-native';
-import StorageManager from './services/StorageManager.js';
+import { useEffect, useState } from 'react';
+import * as Location from 'expo-location';
+
 import Menu from './components/screens/Menu';
 import Profile from './components/screens/Profile';
 import OrderState from './components/screens/OrderState';
@@ -8,12 +10,10 @@ import Details from './components/screens/Details';
 import NavBar from './components/NavBar';
 import Loading from './components/screens/loading';
 
-import { useEffect, useState } from 'react';
 import globalStyles from './styles/global.js';
+import StorageManager from './services/StorageManager.js';
 
-import * as Location from 'expo-location';
-
-const BASE_URL = "https://develop.ewlab.di.unimi.it/mc/2425";
+const BASE_URL = "https://develop.ewlab.di.unimi.it/mc/2425"; //da rimuovere, fare un componente apposito
 
 export default function App() {
   const [screen, setScreen] = useState('loading');
