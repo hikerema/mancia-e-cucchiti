@@ -10,20 +10,20 @@ const globalStyles = StyleSheet.create({
 
   screenContainer: {
     flex: 1,
-    paddingHorizontal: 25,
+    paddingHorizontal: 16,
     paddingTop: 50,
     fontFamily: 'Avenir',
   },
 
   // Sfondi principali
   backgroundLight: {
-    backgroundColor: '#F9F9F9', // Sfondo chiaro
+    backgroundColor: '#fff', // Sfondo chiaro
   },
   backgroundDark: {
     backgroundColor: '#1A1A1A', // Sfondo scuro
   },
   backgroundOrange: {
-    backgroundColor: '#e4953b', // Arancione
+    backgroundColor: '#e68231', // Arancione
   },
   
   // Colori di testo
@@ -52,7 +52,7 @@ const globalStyles = StyleSheet.create({
 
   // Bottoni
   buttonPrimary: {
-    backgroundColor: '#e4953b', // Arancione
+    backgroundColor: '#e68231', // Arancione
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -81,12 +81,12 @@ const globalStyles = StyleSheet.create({
   // Card
   card: {
     flexDirection: 'row',
-    backgroundColor: '#ffffff',
-    borderRadius: 15,
-    shadowColor: '#000',
+    backgroundColor: '#fdfdfd',
+    borderRadius: 12,
+    shadowColor: '#a17b5f',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
     elevation: 2,
     marginVertical: 10,
     marginHorizontal: 5,
@@ -109,8 +109,8 @@ const globalStyles = StyleSheet.create({
   cardImage: {
     width: 110,
     height: "100%",
-    borderTopLeftRadius: 15,
-    borderBottomLeftRadius: 15,
+    borderTopLeftRadius: 12,
+    borderBottomLeftRadius: 12,
   },
   content: {
     flex: 1,
@@ -167,7 +167,7 @@ const globalStyles = StyleSheet.create({
   navbar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: 'rgba(228, 228, 228, 0.2)', 
+    backgroundColor: '#fff', 
     paddingBottom: 20,
     paddingTop: 10,
     borderTopColor: '#ddd',

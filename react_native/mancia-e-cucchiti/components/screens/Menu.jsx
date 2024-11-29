@@ -53,14 +53,23 @@ export default function Menu({ SID, location, BASE_URL, ...props }) {
   
     return (
       <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>
-        <StatusBar style="auto"/>
-        <Text style={globalStyles.textScreenTitle}>Menù</Text>
-        <FlatList
-          data={menus}
-          renderItem={({ item }) => <MenuItem item={item} BASE_URL={BASE_URL} SID={SID} />}
-          keyExtractor={(item) => item.mid.toString()}
-          showsVerticalScrollIndicator={false}
-        />
+      <StatusBar style="auto"/>
+      <Text style={globalStyles.textScreenTitle}>Menù</Text>
+      <FlatList {...props}
+      data={menus}
+      renderItem={({ item }) => (
+      <MenuItem 
+      item={item} 
+      BASE_URL={BASE_URL} 
+      SID={SID} 
+      onPress={() => {
+        props.onButtonPressed(item);
+      }}
+      />
+      )}
+      keyExtractor={(item) => item.mid.toString()}
+      showsVerticalScrollIndicator={false}
+      />
       </View>
     );
 }

@@ -17,6 +17,7 @@ const BASE_URL = "https://develop.ewlab.di.unimi.it/mc/2425"; //da rimuovere, fa
 
 export default function App() {
   const [screen, setScreen] = useState('loading');
+  const [item, setItem] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [SID, setSID] = useState(null);
 
@@ -92,10 +93,16 @@ export default function App() {
     setScreen(screen);
   } 
 
+  const details = (item) => {
+    console.log("going to details");
+    setItem(item);
+    setScreen('details');
+  }
+
   if (screen === 'menu') {
     return (
       <View style={globalStyles.container}> 
-        <Menu SID={SID} location={currentLocation} BASE_URL={BASE_URL} onButtonPressed={() => changeScreen("details")} />
+        <Menu SID={SID} location={currentLocation} BASE_URL={BASE_URL} onButtonPressed={(item) => details(item)} />
         <NavBar onNavigate={changeScreen} />
       </View>
     );
@@ -107,14 +114,16 @@ export default function App() {
       </View>
     );
   } else if (screen === 'orders') {
-    <View style={globalStyles.container}> 
-      <Orders SID={SID} location={currentLocation} BASE_URL={BASE_URL} />
-      <NavBar onNavigate={changeScreen} />
-    </View>
+    return (
+      <View style={globalStyles.container}> 
+        <Orders SID={SID} BASE_URL={BASE_URL} />
+        <NavBar onNavigate={changeScreen} />
+      </View>
+    );
   } else if (screen === 'details') {
     return (
       <View style={globalStyles.container}> 
-        <Details SID={SID} BASE_URL={BASE_URL} />
+        <Details item={item}/>
         <NavBar onNavigate={changeScreen} />
       </View>
     );
