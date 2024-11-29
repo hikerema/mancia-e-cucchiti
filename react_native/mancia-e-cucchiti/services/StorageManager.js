@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SQLite from 'expo-sqlite'; 
 
-export default class StorageManager {
+class StorageManager {
   constructor() {
     this.db = null; 
   }
@@ -31,10 +31,29 @@ export default class StorageManager {
     // ecco qui un esempio di come creare una tabella, i ... sono per indicare che ci sono altri campi da inserire, ma...
     // ...vorrei prima discuterne con te per capire come organizzarli e se effettivamente servono
     const createUserTable = `CREATE TABLE IF NOT EXISTS UserProfile (
-      ID INTEGER PRIMARY KEY AUTOINCREMENT,
+      UID INTEGER PRIMARY KEY,
       Name TEXT NOT NULL,
       Surname TEXT NOT NULL,
-      ...
+    )`;
+
+    const createPaymentData = `CREATE TABLE IF NOT EXISTS PaymentData (
+      UID INTEGER PRIMARY KEY,
+      Name TEXT NOT NULL,
+      CardNumber TEXT NOT NULL,
+      ExpirationDate TEXT NOT NULL,
+      CVV TEXT NOT NULL,
+    )`;
+
+    const createMenusTable = `CREATE TABLE IF NOT EXISTS Menus (
+      MenuID INTEGER NOT NULL,
+      Image TEXT NOT NULL,
+      Version TEXT NOT NULL,
+    )`;
+
+    const createOrdersTable = `CREATE TABLE IF NOT EXISTS Orders (
+      OrderID INTEGER PRIMARY KEY,
+      OrderDate TEXT NOT NULL,
+      OrderStatus TEXT NOT NULL,
     )`;
 
     //dopo di che devi eseguire la query per creare la tabella, e poi fare la stessa cosa per le altre tabelle
@@ -42,7 +61,9 @@ export default class StorageManager {
     return new Promise((resolve, reject) => {
       this.db.transaction(tx => {
         tx.executeSql(createUserTable);
-        //...
+        tx.executeSql(createPaymentData);
+        tx.executeSql(createMenusTable);
+        tx.executeSql(createOrdersTable);
       }, reject, resolve);
     });
   }
@@ -52,29 +73,30 @@ export default class StorageManager {
 
   // Gestione SID
   async setSID(sid) {
-    //capiamo prima dove salvare il sid, se nel db o nel async storage
+    await AsyncStorage.setItem('SID', sid);
   }
 
   async getSID() {
-    //capiamo prima dove salvare il sid, se nel db o nel async storage
+    return await AsyncStorage.getItem('SID');
   }
 
   // Gestione UID
   async setUID(uid) {
-    //capiamo prima dove salvare il uid, se nel db o nel async storage
+    uid = uid.toString();
+    await AsyncStorage.setItem('UID', uid);
   }
 
   async getUID() {
-    //capiamo prima dove salvare il uid, se nel db o nel async storage
+    return await AsyncStorage.getItem('UID');
   }
 
   // Gestione profilo utente
-  async setUserProfile(profile) {
+  async setUserProfile(uid, name, surname) {
     //esempio di query con i PLACEHOLDER, che verranno sostituiti con i valori passati come argomento
-    const query = `INSERT INTO UserProfile (Name, Surname, SID) VALUES (?, ?, ?)`;
+    const query = `INSERT INTO UserProfile (UID, Name, Surname) VALUES (?, ?, ?)`;
     return new Promise((resolve, reject) => {
       this.db.transaction(tx => {
-        tx.executeSql(query, [profile.name, profile.surname, profile.sid],
+        tx.executeSql(query, [uid, name, surname],
           (_, result) => resolve(result),
           (_, error) => reject(error)
         );
@@ -93,11 +115,24 @@ export default class StorageManager {
   }
 
   // Gestione dati di pagamento
-  async setPaymentData(paymentData) {
-    //capiamo prima dove salvare i dati di pagamento, se nel db o nel async storage
+  async setPaymentData(uid, name, cardNumber, expirationDate, cvv) {
+    const query = `INSERT INTO PaymentData (UID, Name, CardNumber, ExpirationDate, CVV) VALUES (?, ?, ?, ?, ?)`;
+    return new Promise((resolve, reject) => {
+      this.db.transaction(tx => {paymentData
+        tx.executeSql(query, [uid, name, cardNumber, expirationDate, cvv],
+          (_, result) => resolve(result),
+          (_, error) => reject(error)
+        );
+      });
+    });
   }
   async getPaymentData() {
-    //capiamo prima dove salvare i dati di pagamento, se nel db o nel async storage
+    const query = `SELECT * FROM PaymentData`;
+    return new Promise((resolve, reject) => {
+      this.db.transaction(tx => {
+        tx.executeSql(query, [], (_, result) => resolve(result.rows._array), (_, error) => reject(error));
+      });
+    });
   }
 
   // Gestione dati dell'applicazione
@@ -109,11 +144,32 @@ export default class StorageManager {
   }
 
   // Gestione immagini dei menù
-  async setMenuImage(image) {
-    //capiamo prima dove salv
+  async setMenuImage(menuID, image, version) {
+    const query = `INSERT INTO Menus (MenuID, Image, Version) VALUES (?, ?, ?)`;
+    return new Promise((resolve, reject) => {
+      this.db.transaction(tx => {
+        tx.executeSql(query, [menuID, image, version],
+          (_, result) => resolve(result),
+          (_, error) => reject(error)
+        );
+      });
+    });
   }
-  async getMenuImage() {
-    //capiamo prima dove salv
+  async getMenuImage(menuID) {
+    const query = `SELECT image FROM Menus WHERE MenuID = ?`;
+    return new Promise((resolve, reject) => {
+      this.db.transaction(tx => {
+        tx.executeSql(query, [menuID], (_, result) => resolve(result.rows._array), (_, error) => reject(error));
+      });
+    });
+  }
+  async getImageVersion(menuID) {
+    const query = `SELECT version FROM Menus WHERE MenuID = ?`;
+    return new Promise((resolve, reject) => {
+      this.db.transaction(tx => {
+        tx.executeSql(query, [menuID], (_, result) => resolve(result.rows._array), (_, error) => reject(error));
+      });
+    });
   }
 
   // Gestione ordini
@@ -124,3 +180,4 @@ export default class StorageManager {
     //capiamo prima dove salv
   }
 }
+export default new StorageManager();
