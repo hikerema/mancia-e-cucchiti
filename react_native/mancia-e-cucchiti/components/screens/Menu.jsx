@@ -1,30 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, FlatList, TouchableOpacity} from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import globalStyles from '../../styles/global.js';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import MenuItem from '../MenuItem.jsx';
+import StorageManager from '../../services/StorageManager.js';
 
-const SID = getSid();
-const LAT = 45.4784;//implementare la geolocalizzazione
-const LNG = 9.2284;//implementare la geolocalizzazione
-
-function getSid() {
-  //prima implementare lo storage poi implementare questa funzione
-  return "DDEqyRxxgFmycNWODc6LVIgkY156VkVSDWvjmqCh9ZHhAxmLNxIH9N4zY992f2c4";
-}
-
-export default function Menu({ location, BASE_URL, ...props }) {
+export default function Menu({ SID, location, BASE_URL, ...props }) {
     const [menus, setMenus] = useState([]);
     const [intervalId, setIntervalId] = useState(null);
 
-    // Bottom navigation
-    const handleHomePress = () => console.log('Home cliccato');
-    const handleMenuPress = () => console.log('Menu cliccato');
-    const handleProfilePress = () => console.log('Profile cliccato');
-
     const onLoad = () => {
-      console.log("Componente Menù montato");
+      console.log("Componente Menù montato"); 
       getMenus();
       const id = setInterval(() => {
         getMenus();
@@ -34,12 +21,13 @@ export default function Menu({ location, BASE_URL, ...props }) {
 
     const getMenus = async () => {
       try {
-        console.log(location);
+        console.log("SID:" + SID);
+        console.log("STRING:" + SID.toString());
           const response = await axios.get(BASE_URL + "/menu", {
               params: {
                   lat: location["latitude"],
                   lng: location["longitude"],
-                  sid: SID
+                  sid: "Oz0oSC8RHdapoDJhVKeKpK79zor3rbUb1tJI4uLwbyEswrPqS18fOjXmGH1zbMYl"
               },
               headers: {
                   'Accept': 'application/json'

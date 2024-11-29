@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const globalStyles = StyleSheet.create({
 
@@ -23,7 +23,7 @@ const globalStyles = StyleSheet.create({
     backgroundColor: '#1A1A1A', // Sfondo scuro
   },
   backgroundOrange: {
-    backgroundColor: '#FF6B35', // Arancione
+    backgroundColor: '#e4953b', // Arancione
   },
   
   // Colori di testo
@@ -38,7 +38,7 @@ const globalStyles = StyleSheet.create({
     fontFamily: 'System',
   },
   textAccent: {
-    color: '#FF6B35', // Colore accento (es. link)
+    color: '#e4953b', // Colore accento (es. link)
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -52,7 +52,7 @@ const globalStyles = StyleSheet.create({
 
   // Bottoni
   buttonPrimary: {
-    backgroundColor: '#FF6B35', // Arancione
+    backgroundColor: '#e4953b', // Arancione
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -167,16 +167,26 @@ const globalStyles = StyleSheet.create({
   navbar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: '#fff',
-    paddingVertical: 20,
+    backgroundColor: 'rgba(228, 228, 228, 0.2)', 
+    paddingBottom: 20,
+    paddingTop: 10,
     borderTopColor: '#ddd',
     borderTopWidth: 0.3,
     height: 80,
   },
   navText: {
     color: '333',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 12,
+    fontWeight: 'regular',
+  },
+
+  navButton: {
+    alignItems: 'center',
+  },
+
+  navIcon: {
+    width: 24,
+    height: 24,
   },
 
 

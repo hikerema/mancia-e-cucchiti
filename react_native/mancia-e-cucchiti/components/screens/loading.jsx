@@ -1,28 +1,37 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, Button, TouchableOpacity} from 'react-native';
+import { View, Text, Image, ActivityIndicator } from 'react-native';
 import globalStyles from '../../styles/global.js';
 import { useEffect } from 'react';
 
+// Importa l'immagine locale
+import loadingImage from '../../assets/logos/loading.png';
+
 export default function Loading(props) {
     let intervalId;
-    onLoad = () => {
+
+    const onLoad = () => {
         console.log("Componente loading montato");
     }
   
-    onUnload = () => {
+    const onUnload = () => {
       console.log("Componente loading smontato");
       clearInterval(intervalId);
     }
     
-    // const 
     useEffect(() => {
-      onLoad()
+      onLoad();
       return onUnload;
     }, []);
   
     return (
         <View style={[globalStyles.screenContainer, globalStyles.backgroundOrange]}>
-            <Text>LOADING</Text>
+            <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+              <Image
+                source={loadingImage}
+                style={{ width: 200, height: 200}}
+              />
+              <ActivityIndicator size="large" color="#ffffff" style={{ marginTop: 20 }} />
+            </View>
         </View>
     );
 }

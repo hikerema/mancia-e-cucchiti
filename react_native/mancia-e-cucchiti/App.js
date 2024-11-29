@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 import StorageManager from './services/StorageManager.js';
 import Menu from './components/screens/Menu';
 import Profile from './components/screens/Profile';
@@ -18,8 +18,27 @@ const BASE_URL = "https://develop.ewlab.di.unimi.it/mc/2425";
 export default function App() {
   const [screen, setScreen] = useState('loading');
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [SID, setSID] = useState(null);
 
   useEffect(() => {
+    const checkSid = async () => {
+      try {
+        const sid = await StorageManager.getSID();
+        console.log(sid);
+        if (sid === null) {
+          getSID();
+          console.log("SID non presente");
+        }
+        else {
+          console.log("SID presente");
+          setSID(sid);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    checkSid();
+
     if (screen === 'loading') {
       getCurrentLocation();
       if (currentLocation !== null) {
@@ -27,6 +46,27 @@ export default function App() {
       }
     }
   }), [];
+  
+  const getSID = async () => {
+    try {
+      const response = await fetch(BASE_URL + "/User", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({}),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setSID(data.sid);
+        await StorageManager.setSID(data.sid);
+        await StorageManager.setUID(data.uid);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Ci scusiamo, si è verificato un errore durante il recupero del SID");
+    }
+  }
 
   const getCurrentLocation = async () => {
     let canUseLocation = false;
@@ -45,23 +85,41 @@ export default function App() {
 
     const location = await Location.getCurrentPositionAsync();
     setCurrentLocation(location.coords);
-    //console.log(currentLocation);
   };
 
   const changeScreen = (screen) => {
     console.log("going to screen", screen);
-    alert("grande agneee sei passatta alla schermata " + screen);
     setScreen(screen);
   } 
 
   if (screen === 'menu') {
     return (
       <View style={globalStyles.container}> 
-        <Menu location={currentLocation} BASE_URL={BASE_URL} onButtonPressed={() => changeScreen("details")} />
+        <Menu SID={SID} location={currentLocation} BASE_URL={BASE_URL} onButtonPressed={() => changeScreen("details")} />
         <NavBar onNavigate={changeScreen} />
       </View>
     );
-  }else if (screen === 'loading') {
+  } else if (screen === 'profile') {
+    return (
+      <View style={globalStyles.container}> 
+        <Profile SID={SID} BASE_URL={BASE_URL} />
+        <NavBar onNavigate={changeScreen} />
+      </View>
+    );
+  } else if (screen === 'orders') {
+    <View style={globalStyles.container}> 
+      <Orders SID={SID} location={currentLocation} BASE_URL={BASE_URL} />
+      <NavBar onNavigate={changeScreen} />
+    </View>
+  } else if (screen === 'details') {
+    return (
+      <View style={globalStyles.container}> 
+        <Details SID={SID} BASE_URL={BASE_URL} />
+        <NavBar onNavigate={changeScreen} />
+      </View>
+    );
+  }
+  else {
     return (
       <View style={[globalStyles.container, globalStyles.backgroundOrange]}> 
         <Loading />
