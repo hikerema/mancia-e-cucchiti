@@ -1,7 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, Button, TouchableOpacity} from 'react-native';
+import { View, Text, Button, TouchableOpacity, Image} from 'react-native';
 import globalStyles from '../../styles/global.js';
 import { useEffect } from 'react';
+
+import goBakcIcon from '../../assets/icons/goBack.png';
 
 export default function Details({item, ...props}) {
     let intervalId;
@@ -23,10 +25,20 @@ export default function Details({item, ...props}) {
       return onUnload;
     }, []);
   
-    /// ATTENZIONE: il pulsante non è un Button ma un TouchableOpacity, perchè Button non prevede la possibilità di modificare lo stile
     return (
-        <View style={globalStyles.container}>
-            <Text style={globalStyles.textScreenTitle}>{item.mid}</Text>
+      <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity onPress={() => props.onButtonPressed()} style={[globalStyles.backButton, globalStyles.textScreenTitle]}>
+            <Image source={goBakcIcon} style={[globalStyles.backButtonIcon]} />
+          </TouchableOpacity>
+          <Text style={[globalStyles.textScreenTitle]}>{item.name}</Text>
         </View>
+        <View style={globalStyles.detailsContainer}>
+          <Text style={globalStyles.detailText}>Description: {item.description}</Text>
+          <Text style={globalStyles.detailText}>Price: ${item.price}</Text>
+          <Text style={globalStyles.detailText}>Category: {item.category}</Text>
+          <Button title="Add to Cart" onPress={() => props.onAddToCart(item)} />
+        </View>
+      </View>
     );
 }

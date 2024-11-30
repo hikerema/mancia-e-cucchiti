@@ -103,28 +103,27 @@ export default function App() {
     return (
       <View style={globalStyles.container}> 
         <Menu SID={SID} location={currentLocation} BASE_URL={BASE_URL} onButtonPressed={(item) => details(item)} />
-        <NavBar onNavigate={changeScreen} />
+        <NavBar activeScreen={screen} onNavigate={changeScreen} />
       </View>
     );
   } else if (screen === 'profile') {
     return (
       <View style={globalStyles.container}> 
         <Profile SID={SID} BASE_URL={BASE_URL} />
-        <NavBar onNavigate={changeScreen} />
+        <NavBar activeScreen={screen} onNavigate={changeScreen} />
       </View>
     );
   } else if (screen === 'orders') {
     return (
       <View style={globalStyles.container}> 
         <Orders SID={SID} BASE_URL={BASE_URL} />
-        <NavBar onNavigate={changeScreen} />
+        <NavBar activeScreen={screen} onNavigate={changeScreen} />
       </View>
     );
   } else if (screen === 'details') {
     return (
       <View style={globalStyles.container}> 
-        <Details item={item}/>
-        <NavBar onNavigate={changeScreen} />
+        <Details item={item} onButtonPressed={() => setScreen('menu')}/>
       </View>
     );
   }

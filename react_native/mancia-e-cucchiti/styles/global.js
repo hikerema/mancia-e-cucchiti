@@ -43,7 +43,7 @@ const globalStyles = StyleSheet.create({
     fontWeight: 'bold',
   },
   textScreenTitle: {
-    color: '#000', // Testo primario
+    color: '#000', // Replace with a single color or implement gradient differently
     fontSize: 35,
     fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
     marginBottom: 10,
@@ -76,6 +76,13 @@ const globalStyles = StyleSheet.create({
     color: '#004AAD', // Testo blu
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  backButton: {
+    paddingRight: 10,
+  },
+  backButtonIcon: {
+    width: 22,
+    height: 22,
   },
 
   // Card
@@ -174,8 +181,14 @@ const globalStyles = StyleSheet.create({
     borderTopWidth: 0.3,
     height: 80,
   },
-  navText: {
+  navTextActive: {
     color: '333',
+    fontSize: 12,
+    fontWeight: 'regular',
+  },
+
+  navText: {
+    color: '#aaaaaa', // agagagagagagag
     fontSize: 12,
     fontWeight: 'regular',
   },
