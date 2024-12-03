@@ -1,45 +1,17 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, {useMemo, useState} from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import axios from 'axios';
-import globalStyles from '../styles/global.js';
+
+import globalStyles from '../styles/global.js'; //Stili
+
+//Servizzi
+import { getMenuImage } from '../services/RequestsManager.js';
 
 const MenuItem = ({ item, BASE_URL, SID, onPress }) => {
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(null); //Stato per l'immagine del menù
 
-  const getStoredImageVersion = useCallback(() => {
-    // Implementa la logica per ottenere la versione dell'immagine memorizzata
-    return -1;
-  }, []);
-
-  const getStoredImage = useCallback(() => {
-    // Implementa la logica per ottenere l'immagine memorizzata
-  }, []);
-
-  const getNewImage = useCallback(async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/menu/${item.mid}/image`, {
-        params: {
-          mid: item.mid,
-          sid: SID
-        },
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-      setImage(response.data.base64);
-    } catch (error) {
-      console.error(error);
-      alert("Ci scusiamo, si è verificato un errore durante il recupero dell'immagine");
-    }
-  }, [BASE_URL, item.mid, SID]);
-
-  useEffect(() => {
-    if (getStoredImageVersion() === item.imageVersion) {
-      getStoredImage();
-    } else {
-      getNewImage();
-    }
-  }, [item.imageVersion, getStoredImageVersion, getStoredImage, getNewImage]);
+  getMenuImage(item).then((image) => {
+    setImage(image);
+  }); //Richiede l'immagine del menù tramite il RequestManager
 
   const formatPrice = useMemo(() => {
     if (item.price && item.price.toString().split('.').length === 2) {
@@ -49,7 +21,7 @@ const MenuItem = ({ item, BASE_URL, SID, onPress }) => {
       }
     }
     return item.price.toString().replace('.', ',');
-  }, [item.price]);
+  }, [item.price]); //Formatta il prezzo del menù in modo corretto per la visualizzazione in euro es 5.0 -> 5,00
 
   item.price = formatPrice;
 

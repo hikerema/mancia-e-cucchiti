@@ -1,74 +1,52 @@
 import { View } from 'react-native';
 import { useEffect, useState } from 'react';
-import * as Location from 'expo-location';
 
+//Schermate
+import Loading from './components/screens/loading'; //Schermata di caricamento iniziale
 import Menu from './components/screens/Menu';
 import Profile from './components/screens/Profile';
 import OrderState from './components/screens/OrderState';
 import Orders from './components/screens/Orders';
 import Details from './components/screens/Details';
-import NavBar from './components/NavBar';
-import Loading from './components/screens/loading';
 
-import globalStyles from './styles/global.js';
-import StorageManager from './services/StorageManager.js';
+import NavBar from './components/NavBar'; //Componente per barra di navigazione
 
-const BASE_URL = "https://develop.ewlab.di.unimi.it/mc/2425"; //da rimuovere, fare un componente apposito
+import globalStyles from './styles/global.js'; //Stili 
+
+//Servizzi
+import * as Location from 'expo-location'; //Per ottenere la posizione attuale
+import { getSID as RequestSID } from './services/RequestsManager.js'; //Per ottenere il SID
+
 
 export default function App() {
-  const [screen, setScreen] = useState('loading');
-  const [item, setItem] = useState(null);
-  const [currentLocation, setCurrentLocation] = useState(null);
+  const [screen, setScreen] = useState('loading'); //Stato per la schermata attuale
+  const [item, setItem] = useState(null); //Stato per sapere quale menu è stato selezionato (per la schermata di dettagli)
+  const [currentLocation, setCurrentLocation] = useState(null); //Stato per la posizione attuale
   const [SID, setSID] = useState(null);
 
-  useEffect(() => {
-    const checkSid = async () => {
-      try {
-        const sid = await StorageManager.getSID();
-        console.log(sid);
-        if (sid === null) {
-          getSID();
-          console.log("SID non presente");
-        }
-        else {
-          console.log("SID presente");
-          setSID(sid);
-        }
-      } catch (error) {
-        console.error(error);
-      }
+  const getSID = async () => {
+    console.log("App.js | La schermata di " + screen + " inizia la procedura di ottenimento del SID");
+    try {
+      let sid = await RequestSID();
+      setSID(sid);
+    } catch (error) {
+      console.error("App.js | Errore imprevisto nel recupero del SID d aparte di schermata" + screen + " " + error);
     }
-    checkSid();
+  } //Chiede al RequestManager il SID
 
-    if (screen === 'loading') {
-      getCurrentLocation();
-      if (currentLocation !== null) {
-        setScreen('menu');
-      }
+  useEffect(() => {
+    if (SID !== null) {
+      if (screen === 'loading') {
+        getCurrentLocation();
+        if (currentLocation !== null) {
+          setScreen('menu');
+        }
+      }    
+    } else {
+      getSID();
     }
   }), [];
   
-  const getSID = async () => {
-    try {
-      const response = await fetch(BASE_URL + "/User", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({}),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setSID(data.sid);
-        await StorageManager.setSID(data.sid);
-        await StorageManager.setUID(data.uid);
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Ci scusiamo, si è verificato un errore durante il recupero del SID");
-    }
-  }
-
   const getCurrentLocation = async () => {
     let canUseLocation = false;
 
@@ -88,35 +66,34 @@ export default function App() {
     setCurrentLocation(location.coords);
   };
 
-  const changeScreen = (screen) => {
-    console.log("going to screen", screen);
-    setScreen(screen);
-  } 
+  const changeScreen = (s) => {
+    console.log("Cambia stato screen:" + screen + " => " + s);
+    setScreen(s);
+  } //Cambia la schermata attuale ad s 
 
   const details = (item) => {
-    console.log("going to details");
     setItem(item);
-    setScreen('details');
-  }
+    changeScreen('details');
+  } //Imposta l'item selezionato e cambia la schermata a 'details'
 
   if (screen === 'menu') {
     return (
       <View style={globalStyles.container}> 
-        <Menu SID={SID} location={currentLocation} BASE_URL={BASE_URL} onButtonPressed={(item) => details(item)} />
+        <Menu location={currentLocation} onButtonPressed={(item) => details(item)} />
         <NavBar activeScreen={screen} onNavigate={changeScreen} />
       </View>
     );
   } else if (screen === 'profile') {
     return (
       <View style={globalStyles.container}> 
-        <Profile SID={SID} BASE_URL={BASE_URL} />
+        <Profile/>
         <NavBar activeScreen={screen} onNavigate={changeScreen} />
       </View>
     );
   } else if (screen === 'orders') {
     return (
       <View style={globalStyles.container}> 
-        <Orders SID={SID} BASE_URL={BASE_URL} />
+        <Orders/>
         <NavBar activeScreen={screen} onNavigate={changeScreen} />
       </View>
     );

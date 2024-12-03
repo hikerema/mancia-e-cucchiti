@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import globalStyles from '../styles/global.js';
+
+import globalStyles from '../styles/global.js'; //Stili
+
+//Icone per la barra di navigazione
 import menuIcon from '../assets/icons/menu.png';
 import menuIconActive from '../assets/icons/menu_active.png';
 import ordersIcon from '../assets/icons/orders.png';

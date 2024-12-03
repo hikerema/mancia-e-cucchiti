@@ -89,7 +89,7 @@ const globalStyles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     backgroundColor: '#fdfdfd',
-    borderRadius: 12,
+    borderRadius: 15,
     shadowColor: '#a17b5f',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -97,14 +97,14 @@ const globalStyles = StyleSheet.create({
     elevation: 2,
     marginVertical: 10,
     marginHorizontal: 5,
-    height: 110,
+    height: 128,
   },
   
   // Testo Card
   cardTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#222',
     fontFamily: 'Avenir',
   },
   cardText: {
@@ -114,10 +114,11 @@ const globalStyles = StyleSheet.create({
     marginVertical : 4,
   },
   cardImage: {
-    width: 110,
+    width: 122,
     height: "100%",
-    borderTopLeftRadius: 12,
-    borderBottomLeftRadius: 12,
+    borderRadius: 10,
+    paddingVertical: 5,
+    paddingLeft: 5,
   },
   content: {
     flex: 1,
@@ -130,7 +131,7 @@ const globalStyles = StyleSheet.create({
     alignItems: 'center',
   },
   price: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
   },
