@@ -1,9 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, Button} from 'react-native';
+import { View, Text, TextInput} from 'react-native';
 import globalStyles from '../../styles/global.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Profile() {
+    const [name, setName] = useState(null);
+    const [copleted, setCompleted] = useState(true);
+
     let intervalId;
     onLoad = () => {
         console.log("Componente montato");
@@ -24,13 +27,22 @@ export default function Profile() {
     }, []);
   
     return (
-        <View style={globalStyles.container}>
-            <StatusBar style="auto"/>
-            <Text style={globalStyles.textScreenTitle}>THIS IS PAGE</Text>
-            <Button
-                title="Agne premimi"
-                onPress={() => alert('brava!')}
-            />
+      <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>
+        {name &&
+          <Text style={globalStyles.textScreenTitle}>Ciao, {name}!</Text>
+        }
+        {!name &&
+          <Text style={globalStyles.textScreenTitle}>Ciao, user!</Text>
+        }
+        <View style={globalStyles.inputContainer}>
+          <Text style={globalStyles.label}>Nome:</Text>
+          <TextInput
+            style={globalStyles.input}
+            onChangeText={text => setName(text)}
+            value={name}
+            placeholder="Inserisci il tuo nome"
+          />
         </View>
+      </View>
     );
 }

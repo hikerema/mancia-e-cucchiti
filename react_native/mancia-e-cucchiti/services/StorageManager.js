@@ -118,7 +118,7 @@ export default class StorageManager {
       const query = `SELECT Version FROM Menus WHERE MenuID = ?`;
       const result = await this.db.getFirstAsync(query, [menuID]);
       console.log("Versione immagine recuperata correttamente");
-      if (result.Version === null)
+      if (result === null)
         return null;
       return result.Version;
     } catch (error) {

@@ -60,7 +60,7 @@ const globalStyles = StyleSheet.create({
   },
   buttonPrimaryText: {
     color: '#FFFFFF', // Testo bianco
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
     fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
   },
@@ -85,11 +85,76 @@ const globalStyles = StyleSheet.create({
     height: 22,
   },
 
+  completeProfileCard: {
+    backgroundColor: '#fdfdfd',
+    shadowColor: '#e68231',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+    borderRadius: 25,
+    padding: 16,
+  },
+  completeProfileCardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    fontFamily: 'Avenir',
+  },
+  completeProfileCardText: {
+    color: '#333', // Testo secondario
+    fontSize: 16,
+    fontFamily: 'Avenir',
+  },
+  completeProfileCardButtonPrimary: {
+    backgroundColor: '#e68231', // Arancione
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 9,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+
+  completeProfileButtonText: {
+    color: '#FFFFFF', // Testo bianco
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
+  },
+
+  inputContainer: {
+    backgroundColor: '#fdfdfd',
+    shadowColor: '#e68231',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+    borderRadius: 25,
+    padding: 16,
+    marginVertical: 8,
+  },
+
+  input: {
+    height: 40,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    fontFamily: 'Avenir',
+  },
+
+  label: {
+    color: '#333', // Testo primario
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'Avenir',
+    paddingHorizontal: 10,
+  }, 
+
   // Card
   card: {
     flexDirection: 'row',
     backgroundColor: '#fdfdfd',
-    borderRadius: 15,
+    borderRadius: 12,
     shadowColor: '#a17b5f',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -97,7 +162,7 @@ const globalStyles = StyleSheet.create({
     elevation: 2,
     marginVertical: 10,
     marginHorizontal: 5,
-    height: 128,
+    height: 120,
   },
   
   // Testo Card
@@ -114,12 +179,59 @@ const globalStyles = StyleSheet.create({
     marginVertical : 4,
   },
   cardImage: {
-    width: 122,
+    width: 120,
     height: "100%",
-    borderRadius: 10,
-    paddingVertical: 5,
-    paddingLeft: 5,
+    borderTopLeftRadius: 12,
+    borderBottomLeftRadius: 12,
   },
+
+  // Dettagli
+
+  detailsContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignContent: 'center',
+    justifyContent: 'center',
+    paddingBottom: 20,
+  },
+
+  detailsCard: {
+    backgroundColor: '#fdfdfd',
+    shadowColor: '#a17b5f',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 2,
+    height: 300,
+    borderRadius: 12,
+  },
+
+  detailsImage: {
+    borderRadius: 12,
+    flex: 1,
+  },
+
+  detailsTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#222',
+    marginVertical: 8,
+  },
+
+  detailsText: {
+    color: '#7D7D7D', // Testo secondario
+    fontSize: 18,
+    marginVertical: 4,
+  },
+
+  buttonDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    height: 50,
+    borderRadius: 100,
+    marginBottom: 30, 
+  },
+
   content: {
     flex: 1,
     padding: 10,
@@ -202,8 +314,6 @@ const globalStyles = StyleSheet.create({
     width: 24,
     height: 24,
   },
-
-
 });
 
 export default globalStyles;

@@ -87,6 +87,27 @@ export const getMenuImage = async (menu) => {
     }
 }
 
+export const getMenuDetails = async (menu) => {
+    try {
+        const SID = await getSID();
+        const response = await axios.get(`${BASE_URL}/menu/${menu.mid}`, {
+            params: {
+                mid: menu.mid,
+                lat: menu.location.lat,
+                lng: menu.location.lng,
+                sid: SID
+            },
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Errore durante il recupero dei dettagli del menù:", error);
+        throw error;
+    }
+}
+
 const getServerImage = async (menu) => {
     console.log("Richiedo immagine al server per: " + menu.mid);
     try {

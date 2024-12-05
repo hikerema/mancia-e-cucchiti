@@ -1,9 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, Button} from 'react-native';
 import globalStyles from '../../styles/global.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { FlatList } from 'react-native-gesture-handler';
+
+import OrderItem from '../OrderItem.jsx';
 
 export default function Orders() {
+    const [orders, setOrders] = useState([]);
+
     let intervalId;
     onLoad = () => {
         console.log("Componente montato");
@@ -24,13 +29,8 @@ export default function Orders() {
     }, []);
   
     return (
-        <View style={globalStyles.container}>
-            <StatusBar style="auto"/>
-            <Text style={globalStyles.textScreenTitle}>THIS IS PAGE</Text>
-            <Button
-                title="Agne premimi"
-                onPress={() => alert('brava!')}
-            />
+        <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>
+            <Text style={globalStyles.textScreenTitle}>Ordini</Text>
         </View>
     );
 }
