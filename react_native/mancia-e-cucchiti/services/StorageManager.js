@@ -169,4 +169,9 @@ export default class StorageManager {
       console.error("Errore durante il recupero degli ordini:", error);
     }
   }
+
+  async isProfileCompleted() {
+    const isCompleted = await AsyncStorage.getItem('ProfileCompleted');
+    return SID;
+  }
 }

@@ -5,7 +5,7 @@ import { useEffect, useState} from 'react';
 import globalStyles from '../../styles/global.js'; //Stili
 
 //Servizzi
-import { getMenuImage } from '../../services/RequestsManager.js';
+import { getMenuImage, isProfileCompleted } from '../../services/RequestsManager.js';
 import { getMenuDetails } from '../../services/RequestsManager.js';
 
 //Icone
@@ -46,6 +46,15 @@ export default function Details({item, ...props}) {
     return onUnload;
   }, []);
 
+  const buyMenu = async (item) => {
+    const isCompleted = await isProfileCompleted()
+    if (isCompleted) {
+      
+    } else {
+      alert("Completa il tuo profilo prima di effettuare un ordine");
+    }
+  }
+
   return (
     <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>
       <StatusBar style="auto" />
@@ -71,7 +80,7 @@ export default function Details({item, ...props}) {
           <Text style={globalStyles.detailsText}>{item.deliveryTime} min</Text>
         </View>
       </View>
-      <TouchableOpacity style={[globalStyles.buttonPrimary, globalStyles.buttonDetails]} onPress={() => props.onButtonPressed(item)}>
+      <TouchableOpacity style={[globalStyles.buttonPrimary, globalStyles.buttonDetails]} onPress={() => buyMenu(item)}>
         <Text style={globalStyles.buttonPrimaryText}>Ordina ora</Text>
       </TouchableOpacity>
     </View>

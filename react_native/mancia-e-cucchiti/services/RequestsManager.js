@@ -163,3 +163,27 @@ export const getOnDeliveryOrders = async () => {
     }
     return onDeliveryOrders;
 }
+
+export const isProfileCompleted = async () => {
+    return await storageManager.isProfileCompleted();
+}
+
+export const buyMenuRequest = async (menu, lat, lng) => {
+    try {
+        const SID = await getSID();
+        const response = await axios.post(`${BASE_URL}/menu/${menu.mid}/buy`, {
+            sid: SID,
+            deliveryLocation: {
+                lat: lat,
+                lng: lng
+            }
+        });
+        if (response.ok) {
+            await storageManager.setOrder(response.data);
+        }
+        return response.data;
+    } catch (error) {
+        console.error("Errore durante l'acquisto del menù:", error);
+        throw error;
+    }
+}
