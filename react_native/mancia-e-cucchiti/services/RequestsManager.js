@@ -128,3 +128,65 @@ const getServerImage = async (menu) => {
     }
 
 }  //Dovrebbe essere completato
+
+//Fino a qui funziona
+//Tento di recuperare l'UID
+export const getUID = async () => {
+    try {
+        console.log("Tento di ottenere l'UID dal disco");
+        let UID = await storageManager.getUID();
+        if (!UID) {
+            console.log("L'UID non è presente nel disco, provo a ottenerlo tramite getSID");
+            await getSID();
+            UID = await storageManager.getUID();
+        }
+        return UID;
+    } catch (error) {
+        console.error("Errore durante il recupero dell'UID:", error);
+        return null;
+    }
+};
+
+//Cerco di memorizzare le info dell'user
+export const updateUserInfo = async (name, surname, nameCard, numberCard, dateCard, cvv) => {
+    month = dateCard.split("/")[0];
+    year = dateCard.split("/")[1];
+    try {
+        // Recupera SID e UID
+        const SID = await getSID();
+        const UID = await getUID();
+        if (!SID || !UID) {
+            throw new Error("Impossibile recuperare SID o UID");
+        }
+
+        // Esegui la richiesta PUT
+        const response = await fetch(`${BASE_URL}/User/${UID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': Bearer `${SID}`
+            },
+            body: JSON.stringify({
+                firstName: name,
+                lastName: surname,
+                cardFullName: nameCard,
+                cardNumber: numberCard,
+                cardExpireMonth: month,
+                cardExpireYear: year,
+                cardCVV: cvv,
+                sid: SID,
+            }),
+        });
+
+        if (response === 204) {
+            console.log("Aggiornamento completato con successo:", data);
+        } else {
+            const errorData = await response.json();
+            console.error("Errore durante l'aggiornamento:", errorData);
+            throw new Error(errorData.message || "Errore durante l'aggiornamento.");
+        }
+    } catch (error) {
+        console.error("Errore durante l'aggiornamento delle informazioni utente:", error);
+        throw error;
+    }
+};

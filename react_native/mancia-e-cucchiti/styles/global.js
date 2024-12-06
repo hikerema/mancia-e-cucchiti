@@ -132,6 +132,7 @@ const globalStyles = StyleSheet.create({
     borderRadius: 25,
     padding: 16,
     marginVertical: 8,
+    marginHorizontal: 5,
   },
 
   input: {
@@ -140,6 +141,11 @@ const globalStyles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     fontFamily: 'Avenir',
+  },
+  //Errori nella compilazione degli input
+  inputError: {
+    borderColor: 'red',
+    borderWidth: 1,
   },
 
   label: {
