@@ -22,6 +22,7 @@ export default function App() {
   const [screen, setScreen] = useState('loading'); //Stato per la schermata attuale
   const [item, setItem] = useState(null); //Stato per sapere quale menu è stato selezionato (per la schermata di dettagli)
   const [currentLocation, setCurrentLocation] = useState(null); //Stato per la posizione attuale
+  const [lastScreen, setLastScreen] = useState(null); //Stato per la schermata precedente
   const [SID, setSID] = useState(null);
 
   const getSID = async () => {
@@ -68,6 +69,7 @@ export default function App() {
 
   const changeScreen = (s) => {
     console.log("Cambia stato screen:" + screen + " => " + s);
+    setLastScreen(screen);
     setScreen(s);
   } //Cambia la schermata attuale ad s 
 
@@ -100,7 +102,7 @@ export default function App() {
   } else if (screen === 'details') {
     return (
       <View style={globalStyles.container}> 
-        <Details item={item} onButtonPressed={() => setScreen('menu')}/>
+        <Details item={item} onButtonPressed={() => changeScreen(lastScreen)}/>
       </View>
     );
   }

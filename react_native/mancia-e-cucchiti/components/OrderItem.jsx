@@ -6,7 +6,7 @@ import globalStyles from '../styles/global.js'; //Stili
 //Servizzi
 import { getMenuImage } from '../services/RequestsManager.js';
 
-const MenuItem = ({ item, onPress }) => {
+const OrderItem = ({ item, onPress }) => {
   const [image, setImage] = useState(null); //Stato per l'immagine del menù
 
   getMenuImage(item).then((image) => {
@@ -47,4 +47,4 @@ const MenuItem = ({ item, onPress }) => {
   );
 };
 
-export default MenuItem;
+export default OrderItem;

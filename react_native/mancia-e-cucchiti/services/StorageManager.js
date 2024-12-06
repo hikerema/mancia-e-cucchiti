@@ -13,8 +13,7 @@ export default class StorageManager {
     const createUserTable = 'CREATE TABLE IF NOT EXISTS UserProfile (UID INTEGER PRIMARY KEY, Name TEXT NOT NULL, Surname TEXT NOT NULL);';
     const createPaymentData = 'CREATE TABLE IF NOT EXISTS PaymentData ( UID INTEGER PRIMARY KEY, Name TEXT NOT NULL, CardNumber TEXT NOT NULL, ExpirationDate TEXT NOT NULL, CVV TEXT NOT NULL);';
     const createMenusTable = 'CREATE TABLE IF NOT EXISTS Menus ( MenuID INTEGER NOT NULL, Image TEXT NOT NULL, Version DEFAULT -1 );';
-    const createOrdersTable = 'CREATE TABLE IF NOT EXISTS Orders (OrderID INTEGER PRIMARY KEY, OrderDate TEXT NOT NULL, OrderStatus TEXT NOT NULL);';
-
+const createOrdersTable = 'CREATE TABLE IF NOT EXISTS Orders (OrderID INTEGER PRIMARY KEY, MenuID INTEGER NOT NULL, OrderDate TEXT NOT NULL, OrderStatus BOOLEAN NOT NULL);';
     //Creazione tabelle
     await this.db.execAsync(createUserTable);
     await this.db.execAsync(createPaymentData);
@@ -126,11 +125,50 @@ export default class StorageManager {
     }
   }// Recupero della versione dell'immagine del menù dal database
 
-  // Gestione ordini
   async setOrder(order) {
-    //capiamo prima dove salv
+    try {
+      const query = `INSERT INTO Orders (OrderID, MenuID, OrderDate, OrderStatus) VALUES (?, ?, ?, ?)`;
+      const r = await this.db.runAsync(query, [order.oid, order.mid, order.creationTimestamp, false]);
+      console.log("Ordine salvato correttamente");
+    }
+    catch (error) {
+      console.error("Errore durante il salvataggio dell'ordine:", error);
+    }
   }
-  async getOrders() {
-    //capiamo prima dove salv
+
+  async setOrderStatus(OrderID, OrderStatus) {
+    try {
+      const query = `UPDATE Orders SET OrderStatus = ? WHERE OrderID = ?`;
+      const r = await this.db.runAsync(query, [OrderStatus, OrderID]);
+      console.log("Stato ordine aggiornato correttamente");
+    } catch (error) {
+      console.error("Errore durante l'aggiornamento dello stato dell'ordine:", error);
+    }
+  }
+  async getDeliveredOrders() {
+    try {
+      const query = `SELECT * FROM Orders WHERE OrderStatus = 1 ORDER BY OrderDate DESC`;
+      const result = await this.db.getAllAsync(query);
+      console.log("Ordini recuperati correttamente");
+      return result;
+    } catch (error) {
+      console.error("Errore durante il recupero degli ordini:", error);
+    }
+  }
+
+  async getOnDeliveryOrders() {
+    try {
+      const query = `SELECT OrderID FROM Orders WHERE OrderStatus = 0 ORDER BY OrderDate DESC`;
+      const result = await this.db.getAllAsync(query);
+      console.log("Ordini recuperati correttamente");
+      return result;
+    } catch (error) {
+      console.error("Errore durante il recupero degli ordini:", error);
+    }
+  }
+
+  async isProfileCompleted() {
+    const isCompleted = await AsyncStorage.getItem('ProfileCompleted');
+    return isCompleted;
   }
 }
