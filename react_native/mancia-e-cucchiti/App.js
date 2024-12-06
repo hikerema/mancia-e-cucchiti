@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+ import { View } from 'react-native';
 import { useEffect, useState } from 'react';
 
 //Schermate

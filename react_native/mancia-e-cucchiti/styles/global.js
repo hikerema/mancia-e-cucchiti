@@ -284,6 +284,14 @@ const globalStyles = StyleSheet.create({
     padding: 10,
   },
 
+  textScreenSubtitle: {
+    color: '#333',
+    fontSize: 20,
+    fontWeight: 'bold',
+    fontFamily: 'Avenir',
+    marginBottom: 10,
+  },
+
   navbar: {
     flexDirection: 'row',
     justifyContent: 'space-around',

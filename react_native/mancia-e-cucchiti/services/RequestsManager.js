@@ -1,6 +1,7 @@
 import axios from 'axios';
 import StorageManager from './StorageManager.js';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry.js';
 
 const BASE_URL = "https://develop.ewlab.di.unimi.it/mc/2425";
 
@@ -128,3 +129,37 @@ const getServerImage = async (menu) => {
     }
 
 }  //Dovrebbe essere completato
+
+export const getDeliveredOrders = async () => {
+    return await storageManager.getDeliveredOrders();
+}
+
+const getOrder = async (oid) => {
+    try {
+        const SID = await getSID();
+        const response = await axios.get(`${BASE_URL}/order/${oid}`, {
+            params: {
+                oid: oid,
+                sid: SID
+            },
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Errore durante il recupero dell'ordine:", error);
+        throw error;
+    }
+}
+
+export const getOnDeliveryOrders = async () => {
+    var onDeliveryOrders = [];
+
+    const onDeliveryOIDs = await storageManager.getOnDeliveryOrders();
+    for (const oid of onDeliveryOIDs) {
+        const order = await getOrder(oid);
+        onDeliveryOrders.push(order);
+    }
+    return onDeliveryOrders;
+}
