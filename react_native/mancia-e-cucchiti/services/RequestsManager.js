@@ -129,5 +129,3 @@ const getServerImage = async (menu) => {
     }
 
 }  //Dovrebbe essere completato
-
-
