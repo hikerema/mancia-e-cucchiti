@@ -48,6 +48,7 @@ export default function Details({item, ...props}) {
 
   return (
     <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>
+      <StatusBar style="auto" />
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <TouchableOpacity onPress={() => props.onButtonPressed()} style={[globalStyles.backButton, globalStyles.textScreenTitle]}>
           <Image source={goBakcIcon} style={[globalStyles.backButtonIcon]} />
@@ -63,7 +64,7 @@ export default function Details({item, ...props}) {
         </View>
         <View >
           <Text style={globalStyles.detailsTitle}>Descrizione</Text>
-          {details && <Text style={globalStyles.detailsText}>{details.longDescription}</Text>}
+          {details && <Text style={globalStyles.detailsText} numberOfLines={8}>{details.longDescription}</Text>}
           <Text style={globalStyles.detailsTitle}>Prezzo</Text>
           <Text style={globalStyles.detailsText}>€{item.price}</Text>
           <Text style={globalStyles.detailsTitle}>Tempo di consegna</Text>
