@@ -132,6 +132,7 @@ const globalStyles = StyleSheet.create({
     borderRadius: 25,
     padding: 16,
     marginVertical: 8,
+    marginHorizontal: 5,
   },
 
   input: {
