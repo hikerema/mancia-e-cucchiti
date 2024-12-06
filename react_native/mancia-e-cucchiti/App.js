@@ -102,7 +102,7 @@ export default function App() {
   } else if (screen === 'details') {
     return (
       <View style={globalStyles.container}> 
-        <Details item={item} onButtonPressed={() => changeScreen(lastScreen)}/>
+        <Details location={currentLocation} item={item} onButtonPressed={() => changeScreen(lastScreen)}/>
       </View>
     );
   }

@@ -169,6 +169,6 @@ const createOrdersTable = 'CREATE TABLE IF NOT EXISTS Orders (OrderID INTEGER PR
 
   async isProfileCompleted() {
     const isCompleted = await AsyncStorage.getItem('ProfileCompleted');
-    return isCompleted;
+    return true; //da implementare
   }
 }

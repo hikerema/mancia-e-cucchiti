@@ -6,13 +6,13 @@ import { useEffect, useState } from 'react';
 import { updateUserInfo } from '../../services/RequestsManager.js';
 
 export default function Profile() {
-    const [name, setName] = useState(null);
-    const [surname, setSurname] = useState(null);
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
 
-    const [nameCard, setNameCard] = useState(null);
-    const [numberCard, setNumberCard] = useState(null);
-    const [dateCard, setDateCard] = useState(null);
-    const [cvv, setCvv] = useState(null);
+    const [nameCard, setNameCard] = useState('');
+    const [numberCard, setNumberCard] = useState('');
+    const [dateCard, setDateCard] = useState('');
+    const [cvv, setCvv] = useState('');
 
     const [numberCardValid, setnumberCardValid] = useState(true);
     const [dateCardValid, setdateCardValid] = useState(true);
@@ -54,8 +54,7 @@ export default function Profile() {
           console.error("Errore durante l'aggiornamento del profilo:", error);
           Alert.alert("Errore", "Non è stato possibile aggiornare il profilo.");
       }
-  };
-
+    };
 
     // Verifica che il numero della carta sia lungo 16 caratteri
     const handleNumberCardChange = (text) => {
@@ -70,8 +69,6 @@ export default function Profile() {
       setCvvValid(cvv.length === 3 || cvv == '');
     };
 
-    const [completed, setCompleted] = useState(true);
-
     let intervalId;
     onLoad = () => {
         console.log("Componente montato");
@@ -85,13 +82,19 @@ export default function Profile() {
       clearInterval(intervalId);
     }
     
-    const getUserInfoAsync = () => {
+    const putUserInfoAsync = async () => {
       try {
-        setEditable(!editable);
+        //await updateUserInfo(name, surname, nameCard, numberCard, dateCard, cvv);
+        invertEdit();
       } catch (error) {
         console.error("Profile.jsx | Errore durante il recupero dei menù:", error);
         alert("Ci scusiamo, si è verificato un errore durante il recupero dei menù"); //Messaggio di errore da migliorare
       }
+    }
+
+    const invertEdit = () => {
+      setEditable(!editable);
+      setEdit(!edit);
     }
 
     // const 
@@ -115,7 +118,7 @@ export default function Profile() {
           <View style={globalStyles.inputContainer}>
             <Text style={globalStyles.label}>Nome</Text>
             <TextInput
-              editable={!editable}
+              editable={editable}
               style={globalStyles.input}
               onChangeText={text => setName(text)}
               value={name}
@@ -127,7 +130,7 @@ export default function Profile() {
             <Text style={globalStyles.label}>Cognome</Text>
             <TextInput
               style={globalStyles.input}
-              editable={!editable}
+              editable={editable}
               onChangeText={text => setSurname(text)}
               value={surname}
               placeholder="Inserisci il tuo cognome"
@@ -139,7 +142,7 @@ export default function Profile() {
             <View style={globalStyles.inputContainer}>
               <TextInput
                 style={globalStyles.input}
-                editable={!editable}
+                editable={editable}
                 onChangeText={text => setNameCard(text)}
                 value={nameCard}
                 placeholder="Nome e Cognome sulla carta"
@@ -149,7 +152,7 @@ export default function Profile() {
             <View style={[globalStyles.inputContainer, !numberCardValid && globalStyles.inputError]}>
             <TextInput
                 style={globalStyles.input}
-                editable={!editable}
+                editable={editable}
                 onChangeText={text => setNumberCard(text)}
                 onBlur={handleNumberCardChange}
                 value={numberCard}
@@ -161,7 +164,7 @@ export default function Profile() {
             <View style={{ flex: 1, marginRight: 10 }}>
               <TextInput
                 style={[globalStyles.input, { textAlign: 'center' }, !dateCardValid && globalStyles.inputError]}
-                editable={!editable}
+                editable={editable}
                 onChangeText={text => setDateCard(text)}
                 onBlur={handleDateCardChange}
                 value={dateCard}
@@ -172,7 +175,7 @@ export default function Profile() {
               <TextInput
                 style={[globalStyles.input, { textAlign: 'center' }, , !cvvValid && globalStyles.inputError]}
                 onChangeText={text => setCvv(text)}
-                editable={!editable}
+                editable={editable}
                 onBlur={handleCvvChange}
                 value={cvv}
                 placeholder="CVV"
@@ -181,8 +184,13 @@ export default function Profile() {
           </View>
         </View>
         {edit &&
-          <TouchableOpacity style={[globalStyles.buttonPrimary, globalStyles.buttonDetails]} onButtonPress={setEditable(true)}>
+          <TouchableOpacity style={[globalStyles.buttonPrimary, globalStyles.buttonDetails]} onPress={invertEdit}>
             <Text style={globalStyles.completeProfileButtonText}>Modifica</Text>
+          </TouchableOpacity>
+        }
+        {!edit &&
+          <TouchableOpacity style={[globalStyles.buttonPrimary, globalStyles.buttonDetails]} onPress={putUserInfoAsync}>
+            <Text style={globalStyles.completeProfileButtonText}>Salva</Text>
           </TouchableOpacity>
         }
         

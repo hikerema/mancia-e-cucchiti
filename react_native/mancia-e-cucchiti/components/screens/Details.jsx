@@ -5,13 +5,13 @@ import { useEffect, useState} from 'react';
 import globalStyles from '../../styles/global.js'; //Stili
 
 //Servizzi
-import { getMenuImage, isProfileCompleted } from '../../services/RequestsManager.js';
+import { getMenuImage, isProfileCompleted, buyMenuRequest } from '../../services/RequestsManager.js';
 import { getMenuDetails } from '../../services/RequestsManager.js';
 
 //Icone
 import goBakcIcon from '../../assets/icons/goBack.png';
 
-export default function Details({item, ...props}) {
+export default function Details({item, location, ...props}) {
   const [image, setImage] = useState(null); //Stato per l'immagine del menù
   const [details, setDetails] = useState(null); //Stato per i dettagli del menù
 
@@ -49,7 +49,8 @@ export default function Details({item, ...props}) {
   const buyMenu = async (item) => {
     const isCompleted = await isProfileCompleted()
     if (isCompleted) {
-      
+      await buyMenuRequest(item, location.lat, location.lng);
+      //vai al dettaglio oridne
     } else {
       alert("Completa il tuo profilo prima di effettuare un ordine");
     }
