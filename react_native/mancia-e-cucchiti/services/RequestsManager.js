@@ -145,7 +145,7 @@ export const getUID = async () => {
         console.error("Errore durante il recupero dell'UID:", error);
         return null;
     }
-};
+}
 
 //Cerco di memorizzare le info dell'user
 export const updateUserInfo = async (name, surname, nameCard, numberCard, dateCard, cvv) => {
@@ -189,4 +189,62 @@ export const updateUserInfo = async (name, surname, nameCard, numberCard, dateCa
         console.error("Errore durante l'aggiornamento delle informazioni utente:", error);
         throw error;
     }
-};
+}
+
+export const getDeliveredOrders = async () => {
+    return await storageManager.getDeliveredOrders();
+}
+
+const getOrder = async (oid) => {
+    try {
+        const SID = await getSID();
+        const response = await axios.get(`${BASE_URL}/order/${oid}`, {
+            params: {
+                oid: oid,
+                sid: SID
+            },
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Errore durante il recupero dell'ordine:", error);
+        throw error;
+    }
+}
+
+export const getOnDeliveryOrders = async () => {
+    var onDeliveryOrders = [];
+
+    const onDeliveryOIDs = await storageManager.getOnDeliveryOrders();
+    for (const oid of onDeliveryOIDs) {
+        const order = await getOrder(oid);
+        onDeliveryOrders.push(order);
+    }
+    return onDeliveryOrders;
+}
+
+export const isProfileCompleted = async () => {
+    return await storageManager.isProfileCompleted();
+}
+
+export const buyMenuRequest = async (menu, lat, lng) => {
+    try {
+        const SID = await getSID();
+        const response = await axios.post(`${BASE_URL}/menu/${menu.mid}/buy`, {
+            sid: SID,
+            deliveryLocation: {
+                lat: lat,
+                lng: lng
+            }
+        });
+        if (response.ok) {
+            await storageManager.setOrder(response.data);
+        }
+        return response.data;
+    } catch (error) {
+        console.error("Errore durante l'acquisto del menù:", error);
+        throw error;
+    }
+}
