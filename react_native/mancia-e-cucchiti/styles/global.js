@@ -141,6 +141,11 @@ const globalStyles = StyleSheet.create({
     paddingHorizontal: 10,
     fontFamily: 'Avenir',
   },
+  //Errori nella compilazione degli input
+  inputError: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
 
   label: {
     color: '#333', // Testo primario
