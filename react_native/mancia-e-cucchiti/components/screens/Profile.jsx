@@ -193,7 +193,14 @@ export default function Profile() {
             <Text style={globalStyles.completeProfileButtonText}>Salva</Text>
           </TouchableOpacity>
         }
-        
+        <View style={globalStyles.inputContainer}>
+            <Text style={globalStyles.label}>Ultimo ordine</Text>
+            <Text
+              style={globalStyles.input}
+              onChangeText={text => setName(text)}
+              value={name}
+            />
+          </View>
       </ScrollView>
       </KeyboardAvoidingView>
       </View>

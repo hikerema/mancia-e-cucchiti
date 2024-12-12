@@ -214,6 +214,17 @@ const getOrder = async (oid) => {
     }
 }
 
+export const getLastDeliveredOrder = async () => {
+    try {
+        const deliveredOrders = await getDeliveredOrders();
+        const lastDeliveredOrder = deliveredOrders[deliveredOrders.length-1];
+        return lastDeliveredOrder; 
+    } catch (error) {
+        console.error("Errore durante il recupero dell'ultimo ordine:", error);
+        throw error;
+    }
+}
+
 export const getOnDeliveryOrders = async () => {
     var onDeliveryOrders = [];
 
