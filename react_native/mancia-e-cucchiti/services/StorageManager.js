@@ -117,9 +117,11 @@ const createOrdersTable = 'CREATE TABLE IF NOT EXISTS Orders (OrderID INTEGER PR
       const query = `SELECT Version FROM Menus WHERE MenuID = ?`;
       const result = await this.db.getFirstAsync(query, [menuID]);
       console.log("Versione immagine recuperata correttamente");
-      if (result === null)
+      try {
+        return result.Version;
+      } catch (error) {
         return null;
-      return result.Version;
+      }
     } catch (error) {
       console.error("Errore durante il recupero della versione dell'immagine:", error);
     }

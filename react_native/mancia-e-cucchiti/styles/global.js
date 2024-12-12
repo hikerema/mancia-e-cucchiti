@@ -39,15 +39,23 @@ const globalStyles = StyleSheet.create({
   },
   textAccent: {
     color: '#e4953b', // Colore accento (es. link)
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
+    textAlign: 'center',
   },
+
+  AccentContainer: {
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+
   textScreenTitle: {
     color: '#000', // Replace with a single color or implement gradient differently
     fontSize: 35,
     fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
     marginBottom: 10,
     fontWeight: '900',
+    width: '80%',
   },
 
   // Bottoni
@@ -238,6 +246,13 @@ const globalStyles = StyleSheet.create({
     marginBottom: 30, 
   },
 
+  textScreenSubtitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#111',
+    marginVertical: 10,
+  },
+
   content: {
     flex: 1,
     padding: 10,
@@ -288,6 +303,35 @@ const globalStyles = StyleSheet.create({
     backgroundColor: '#E6F1FF', // Sfondo hover per icone
     borderRadius: 50,
     padding: 10,
+  },
+
+  VoidOrderContainer: {
+    backgroundColor: '#fdfdfd',
+    alignItems: 'center',
+    height: 200,
+  },
+
+  VoidOrderText: {
+    color: '#bbb',
+    fontSize: 19,
+    marginTop: 20,
+    fontFamily: 'Avenir',
+  },
+
+  iconProfile: {
+    width: 55,
+    height: 55,
+    borderRadius: 100,
+    backgroundColor: '#e68231', 
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 16,
+  },
+
+  iconProfileText: {
+    color: '#333',
+    fontSize: 30,
+    fontWeight: 'bold',
   },
 
   navbar: {

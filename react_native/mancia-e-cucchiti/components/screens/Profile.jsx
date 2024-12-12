@@ -1,208 +1,139 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import globalStyles from '../../styles/global.js';
 import { useEffect, useState } from 'react';
 
-import { updateUserInfo } from '../../services/RequestsManager.js';
+import { getProfile, getOrder, getMenuByMid, getMenuImage} from '../../services/RequestsManager.js';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry.js';
+import editProfile from './editProfile.jsx';
 
-export default function Profile() {
-    const [name, setName] = useState('');
-    const [surname, setSurname] = useState('');
 
-    const [nameCard, setNameCard] = useState('');
-    const [numberCard, setNumberCard] = useState('');
-    const [dateCard, setDateCard] = useState('');
-    const [cvv, setCvv] = useState('');
+export default function Profile({...props}) {
+  const [image, setImage] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [order, setOrder] = useState(null);
+  const [menu, setMenu] = useState(null);
 
-    const [numberCardValid, setnumberCardValid] = useState(true);
-    const [dateCardValid, setdateCardValid] = useState(true);
-    const [cvvValid, setCvvValid] = useState(true);
-
-    const [edit, setEdit] = useState(true);
-    const [editable, setEditable] = useState(false);
-
-    const handleSaveProfile = async () => {
-      try {
-          if (!name) {
-              Alert.alert("Errore", "Nome obbligatorio");
-              return;
-          }
-          if (!surname) {
-            Alert.alert("Errore", "Cognome obbligatorio");
-            return;
-          }
-          if (!nameCard || !numberCard || !dateCard || !cvv) {
-            Alert.alert("Errore", "Dati della carta incompleti");
-            return;
-          }
-
-          const userInfo = {
-              name,
-              surname,
-              paymentMethod: {
-                  nameCard,
-                  numberCard,
-                  dateCard,
-                  cvv,
-              },
-          };
-
-          console.log("Invio dati aggiornati:", userInfo);
-
-          Alert.alert("Successo", "Il profilo è stato aggiornato con successo!");
-      } catch (error) {
-          console.error("Errore durante l'aggiornamento del profilo:", error);
-          Alert.alert("Errore", "Non è stato possibile aggiornare il profilo.");
-      }
-    };
-
-    // Verifica che il numero della carta sia lungo 16 caratteri
-    const handleNumberCardChange = (text) => {
-      setnumberCardValid(numberCard.length === 16 || numberCard == '');
-    };
-    // Verifica che la data di scadenza sia nel formato MM/AA (4 cifre)
-    const handleDateCardChange = (text) => {
-      setdateCardValid(/^\d{2}\/\d{2}$/.test(dateCard) || dateCard == '');
-    };
-    // Verifica che il CVV sia di 3 cifre
-    const handleCvvChange = (text) => {
-      setCvvValid(cvv.length === 3 || cvv == '');
-    };
-
-    let intervalId;
-    onLoad = () => {
-        console.log("Componente montato");
-        intervalId = setInterval(() => {
-          console.log("E' passato un secondo!");
-        }, 5000);
+  const getProfileInfo = async () => {
+    try {
+      setProfile(await getProfile());
+    } catch (error) {
+      console.error("Errore durante il recupero delle informazioni del profilo:", error);
     }
-  
-    onUnload = () => {
-      console.log("Componente smontato");
-      clearInterval(intervalId);
-    }
-    
-    const putUserInfoAsync = async () => {
-      try {
-        //await updateUserInfo(name, surname, nameCard, numberCard, dateCard, cvv);
-        invertEdit();
-      } catch (error) {
-        console.error("Profile.jsx | Errore durante il recupero dei menù:", error);
-        alert("Ci scusiamo, si è verificato un errore durante il recupero dei menù"); //Messaggio di errore da migliorare
-      }
-    }
-
-    const invertEdit = () => {
-      setEditable(!editable);
-      setEdit(!edit);
-    }
-
-    // const 
-    useEffect(() => {
-      onLoad()
-      return onUnload;
-    }, []);
-  
-    return (
-      <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>
-        <StatusBar style="auto"></StatusBar>
-        {name &&
-          <Text style={globalStyles.textScreenTitle}>Ciao, {name}!</Text>
+  }
+  const getOrderAsync = async () => {
+    try {
+      if(profile !== null){
+        if(profile.lastOid !== null){
+          setOrder(await getOrder(profile.lastOid));
         }
-        {!name &&
-          <Text style={globalStyles.textScreenTitle}>Ciao, user!</Text>
-        }
-        <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
-          <ScrollView contentContainerStyle={{ flexGrow: 1}}>
-          {/* Campo per il nome */}
-          <View style={globalStyles.inputContainer}>
-            <Text style={globalStyles.label}>Nome</Text>
-            <TextInput
-              editable={editable}
-              style={globalStyles.input}
-              onChangeText={text => setName(text)}
-              value={name}
-              placeholder="Inserisci il tuo nome"
+      }
+
+    } catch (error) {
+      console.error("Errore durante il recupero degli ordini:", error);
+      alert("Ci scusiamo, si è verificato un errore durante il recupero degli ordini");
+    }
+  } //Metodo per ottenere gli ordini tramite il requestManager
+ 
+  const getMenuInfo = async () => {
+    if (order === null) return;
+    try {
+      setMenu(await getMenuByMid(order.mid, order.deliveryLocation.lat, order.deliveryLocation.lng)); 
+    } catch (error) {
+      console.error("Errore durante il recupero delle informazioni", error);
+    } 
+  }
+
+  const getMenuImageAsync = async () => {
+    try {
+      if (menu === null) return;
+      setImage(await getMenuImage(menu.mid, menu.imageVersion));
+    } catch (error) {
+      console.error("Errore durante il recupero dell'immagine", error);
+    }
+  }
+
+  useEffect(() => {
+    onLoad();
+    return onUnload;
+  }, []);
+
+  useEffect(() => {
+    if (profile) {
+      getOrderAsync();
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (order) {
+      getMenuInfo();
+    }
+  }, [order]);
+
+  useEffect(() => {
+    if (menu) {
+      getMenuImageAsync();
+    }
+  }, [menu]);
+
+  const onLoad = () => {
+    console.log("Componente Profilo montato");
+    getProfileInfo();
+  };
+
+  const onUnload = () => {
+    console.log("Componente Profilo smontato");
+  };
+
+  return (
+    <View style={[globalStyles.screenContainer]}>
+      <StatusBar style="auto" />
+
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      {profile && profile.firstName &&
+        <Text style={[globalStyles.textScreenTitle]}>Ciao, {profile.firstName}!</Text>
+      }
+      {profile && !profile.firstName &&
+        <Text style={[globalStyles.textScreenTitle]}>Ciao, User!</Text>
+      }
+      {!profile &&
+        <Text style={globalStyles.textScreenTitle}>Ciao, User!</Text>
+      }
+        <TouchableOpacity style={globalStyles.iconProfile} onPress={() => props.onButtonPressed()}>
+          <Text style={globalStyles.iconProfileText}>U</Text>
+        </TouchableOpacity>
+      </View>
+
+      <Text style={globalStyles.textScreenSubtitle}>Il tuo ultimo ordine</Text>
+
+      {menu &&
+        <View style={[globalStyles.card]}>
+          {image && (
+            <Image
+              source={{ uri: `data:image/jpeg;base64,${image}` }}
+              style={globalStyles.cardImage}
             />
-          </View>
-          {/* Campo per il cognome */}
-          <View style={globalStyles.inputContainer}>
-            <Text style={globalStyles.label}>Cognome</Text>
-            <TextInput
-              style={globalStyles.input}
-              editable={editable}
-              onChangeText={text => setSurname(text)}
-              value={surname}
-              placeholder="Inserisci il tuo cognome"
-            />
-          </View>
-          {/* Campi per il metodo di pagamento */}
-          <View style={globalStyles.inputContainer}>
-            <Text style={globalStyles.label}>Metodo di pagamento</Text>
-            <View style={globalStyles.inputContainer}>
-              <TextInput
-                style={globalStyles.input}
-                editable={editable}
-                onChangeText={text => setNameCard(text)}
-                value={nameCard}
-                placeholder="Nome e Cognome sulla carta"
-              />
+          )}
+          <View style={globalStyles.content}>
+            <Text style={globalStyles.cardTitle}>{menu.name}</Text>
+            <Text style={globalStyles.cardText} numberOfLines={2}>
+              {menu.shortDescription}
+            </Text>
+            <View style={globalStyles.footer}>
+              <Text style={globalStyles.price}>€{menu.price}</Text>
+              <Text style={globalStyles.deliveryTime}>Consegna: {menu.deliveryTime} min</Text>
             </View>
-            {/* Campo numero della carta */}
-            <View style={[globalStyles.inputContainer, !numberCardValid && globalStyles.inputError]}>
-            <TextInput
-                style={globalStyles.input}
-                editable={editable}
-                onChangeText={text => setNumberCard(text)}
-                onBlur={handleNumberCardChange}
-                value={numberCard}
-                placeholder="Numero della carta"
-              />
-            </View>
-            {/* Campo data di scadenza*/}
-            <View style={[globalStyles.inputContainer,{ flexDirection: 'row', justifyContent: 'space-between' }]}>
-            <View style={{ flex: 1, marginRight: 10 }}>
-              <TextInput
-                style={[globalStyles.input, { textAlign: 'center' }, !dateCardValid && globalStyles.inputError]}
-                editable={editable}
-                onChangeText={text => setDateCard(text)}
-                onBlur={handleDateCardChange}
-                value={dateCard}
-                placeholder="Data di scadenza"
-              />
-          </View>
-          <View style={{ flex: 1, marginRight: 10 }}>
-              <TextInput
-                style={[globalStyles.input, { textAlign: 'center' }, , !cvvValid && globalStyles.inputError]}
-                onChangeText={text => setCvv(text)}
-                editable={editable}
-                onBlur={handleCvvChange}
-                value={cvv}
-                placeholder="CVV"
-              />
-          </View>
           </View>
         </View>
-        {edit &&
-          <TouchableOpacity style={[globalStyles.buttonPrimary, globalStyles.buttonDetails]} onPress={invertEdit}>
-            <Text style={globalStyles.completeProfileButtonText}>Modifica</Text>
-          </TouchableOpacity>
-        }
-        {!edit &&
-          <TouchableOpacity style={[globalStyles.buttonPrimary, globalStyles.buttonDetails]} onPress={putUserInfoAsync}>
-            <Text style={globalStyles.completeProfileButtonText}>Salva</Text>
-          </TouchableOpacity>
-        }
-        <View style={globalStyles.inputContainer}>
-            <Text style={globalStyles.label}>Ultimo ordine</Text>
-            <Text
-              style={globalStyles.input}
-              onChangeText={text => setName(text)}
-              value={name}
-            />
-          </View>
-      </ScrollView>
-      </KeyboardAvoidingView>
-      </View>
-    );
-}
+      }
+      {!menu &&
+        <View style={globalStyles.VoidOrderContainer}>
+          <Text style={globalStyles.VoidOrderText}>Non hai ancora effettuato ordini</Text>
+        </View>
+      }
+      <TouchableOpacity style={globalStyles.AccentContainer} onPress={() => props.onButtonPressed()}>
+        <Text style={globalStyles.textAccent}>Modifica il tuo profilo</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};

@@ -16,7 +16,7 @@ export default function Details({item, location, ...props}) {
   const [details, setDetails] = useState(null); //Stato per i dettagli del menù
 
   const fetchImage = async () => {
-    const image = await getMenuImage(item);
+    const image = await getMenuImage(item.mid, item.imageVersion);
     setImage(image);
   }
 

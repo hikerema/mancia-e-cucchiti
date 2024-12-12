@@ -3,13 +3,13 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 
 import globalStyles from '../styles/global.js'; //Stili
 
-//Servizzi
+//Servizi
 import { getMenuImage } from '../services/RequestsManager.js';
 
 const MenuItem = ({ item, onPress }) => {
   const [image, setImage] = useState(null); //Stato per l'immagine del menù
 
-  getMenuImage(item).then((image) => {
+  getMenuImage(item.mid, item.imageVersion).then((image) => {
     setImage(image);
   }); //Richiede l'immagine del menù tramite il RequestManager
 

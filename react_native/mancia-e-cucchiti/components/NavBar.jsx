@@ -24,7 +24,7 @@ const Navbar = ({ activeScreen, onNavigate }) => {
       </TouchableOpacity>
       <TouchableOpacity style={globalStyles.navButton} onPress={() => onNavigate('profile')}>
         <Image source={activeScreen === 'profile' ? profileIconActive : profileIcon} style={globalStyles.navIcon} />
-        <Text style={activeScreen === 'profile' ? globalStyles.navTextActive :  globalStyles.navText}>Profilo</Text>
+        <Text style={activeScreen === 'profile' ? globalStyles.navTextActive :  globalStyles.navText}>Account</Text>
       </TouchableOpacity>
     </View>
   );

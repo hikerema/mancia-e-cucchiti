@@ -8,6 +8,7 @@ import Profile from './components/screens/Profile';
 import OrderState from './components/screens/OrderState';
 import Orders from './components/screens/Orders';
 import Details from './components/screens/Details';
+import EditProfile from './components/screens/editProfile';
 
 import NavBar from './components/NavBar'; //Componente per barra di navigazione
 
@@ -88,7 +89,7 @@ export default function App() {
   } else if (screen === 'profile') {
     return (
       <View style={globalStyles.container}> 
-        <Profile/>
+        <Profile onButtonPressed={() => changeScreen("editProfile")}/>
         <NavBar activeScreen={screen} onNavigate={changeScreen} />
       </View>
     );
@@ -103,6 +104,13 @@ export default function App() {
     return (
       <View style={globalStyles.container}> 
         <Details location={currentLocation} item={item} onButtonPressed={() => changeScreen(lastScreen)}/>
+      </View>
+    );
+  } else if (screen === 'editProfile') {
+    return (
+      <View style={globalStyles.container}> 
+        <EditProfile/>
+        <NavBar activeScreen={screen} onNavigate={changeScreen} />
       </View>
     );
   }

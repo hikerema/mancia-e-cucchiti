@@ -59,31 +59,31 @@ export const getMenus = async (lat, lng) => {
     }
 }
 
-export const getMenuImage = async (menu) => {
-    console.log("Richiesta immagine al disco per: " + menu.mid);
+export const getMenuImage = async (mid, imageVersion) => {
+    console.log("Richiesta immagine al disco per: " + mid);
     try {
-        const imageVersion = await storageManager.getImageVersion(menu.mid);
-        if (imageVersion !== null) {
-            if (imageVersion === menu.imageVersion) {
-                const image = await storageManager.getMenuImage(menu.mid);
+        const storedImageVersion = await storageManager.getImageVersion(mid);
+        if (storedImageVersion !== null) {
+            if (storedImageVersion === imageVersion) {
+                const image = await storageManager.getMenuImage(mid);
                 if (image !== null) {
-                    console.log("Immagine aggiornata per: " + menu.mid);
+                    console.log("Immagine aggiornata per: " + mid);
                     return image;
                 } else {
-                    console.log("Immagine non presente (errore di salvataggi pregresso) per: " + menu.mid);
-                    return await getServerImage(menu);
+                    console.log("Immagine non presente (errore di salvataggi pregresso) per: " + mid);
+                    return await getServerImage(mid, imageVersion);
                 }
             } else {
-                console.log("Versione immagine non aggiornata per: " + menu.mid);
-                return await getServerImage(menu);
+                console.log("Versione immagine non aggiornata per: " + mid);
+                return await getServerImage(mid, imageVersion);
             }
         } else {
-            console.log("Versione immagine non presente per: " + menu.mid);
-            return await getServerImage(menu);
+            console.log("Versione immagine non presente per: " + mid);
+            return await getServerImage(mid, imageVersion);
         }
     } catch (error) {
         console.error("Errore insapsettato durante il recupero dell'immagine dal disco: ", error);
-        return await getServerImage(menu);
+        return await getServerImage(mid, imageVersion);
     }
 }
 
@@ -108,20 +108,41 @@ export const getMenuDetails = async (menu) => {
     }
 }
 
-const getServerImage = async (menu) => {
-    console.log("Richiedo immagine al server per: " + menu.mid);
+export const getMenuByMid = async (mid, lat, lng) => {
     try {
         const SID = await getSID();
-        const response = await axios.get(`${BASE_URL}/menu/${menu.mid}/image`, {
+        const response = await axios.get(`${BASE_URL}/menu/${mid}`, {
             params: {
-                mid: menu.mid,
+                mid: mid,
+                lat: lat,
+                lng: lng,
                 sid: SID
             },
             headers: {
                 'Accept': 'application/json'
             }
         });
-        await storageManager.setMenuImage(menu.mid, response.data.base64, menu.imageVersion);
+        return response.data;
+    } catch (error) {
+        console.error("Errore durante il recupero dei dettagli del menù:", error);
+        throw error;
+    }
+}
+
+const getServerImage = async (mid, imageVersion) => {
+    console.log("Richiedo immagine al server per: " + mid);
+    try {
+        const SID = await getSID();
+        const response = await axios.get(`${BASE_URL}/menu/${mid}/image`, {
+            params: {
+                mid: mid,
+                sid: SID
+            },
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        await storageManager.setMenuImage(mid, response.data.base64, imageVersion);
         return response.data.base64;
     } catch (error) {
         console.error("Errore durante il recupero dell'immagine del menù dal server: ", error);
@@ -214,11 +235,20 @@ const getOrder = async (oid) => {
     }
 }
 
-export const getLastDeliveredOrder = async () => {
+export const getProfile = async () => {
     try {
-        const deliveredOrders = await getDeliveredOrders();
-        const lastDeliveredOrder = deliveredOrders[deliveredOrders.length-1];
-        return lastDeliveredOrder; 
+        const SID = await getSID();
+        const UID = await getUID();
+        const response = await axios.get(`${BASE_URL}/User/${UID}`, {
+            params: {
+                uid: UID,
+                sid: SID
+            },
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        return response.data;
     } catch (error) {
         console.error("Errore durante il recupero dell'ultimo ordine:", error);
         throw error;
