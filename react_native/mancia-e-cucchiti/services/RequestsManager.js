@@ -161,6 +161,7 @@ export const getUID = async () => {
             await getSID();
             UID = await storageManager.getUID();
         }
+        console.log("UID: " + UID);
         return UID;
     } catch (error) {
         console.error("Errore durante il recupero dell'UID:", error);
@@ -185,7 +186,6 @@ export const updateUserInfo = async (name, surname, nameCard, numberCard, dateCa
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': Bearer `${SID}`
             },
             body: JSON.stringify({
                 firstName: name,
@@ -199,8 +199,8 @@ export const updateUserInfo = async (name, surname, nameCard, numberCard, dateCa
             }),
         });
 
-        if (response === 204) {
-            console.log("Aggiornamento completato con successo:", data);
+        if (response.status === 204) {
+            console.log("Aggiornamento completato con successo");
         } else {
             const errorData = await response.json();
             console.error("Errore durante l'aggiornamento:", errorData);
@@ -273,19 +273,26 @@ export const isProfileCompleted = async () => {
 export const buyMenuRequest = async (menu, lat, lng) => {
     try {
         const SID = await getSID();
-        const response = await axios.post(`${BASE_URL}/menu/${menu.mid}/buy`, {
+        console.log("SID: ", SID);
+        console.log("menu: ", menu.mid.toString());
+        console.log("lat:", lat);
+        console.log("lng:", lng);
+
+        const response = await axios.post(`${BASE_URL}/menu/${menu.mid.toString()}/buy`, {
             sid: SID,
             deliveryLocation: {
                 lat: lat,
-                lng: lng
+                lng: lng,
             }
         });
         if (response.ok) {
             await storageManager.setOrder(response.data);
         }
+        
         return response.data;
     } catch (error) {
         console.error("Errore durante l'acquisto del menù:", error);
         throw error;
     }
+    
 }

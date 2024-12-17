@@ -3,7 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingVi
 import globalStyles from '../../styles/global.js';
 import { useEffect, useState } from 'react';
 
-import { updateUserInfo } from '../../services/RequestsManager.js';
+import { updateUserInfo, getProfile } from '../../services/RequestsManager.js';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry.js';
 
 export default function EditProfile() {
     const [name, setName] = useState('');
@@ -20,6 +21,8 @@ export default function EditProfile() {
 
     const [edit, setEdit] = useState(true);
     const [editable, setEditable] = useState(false);
+
+    const [profile, setProfile] = useState(null);
 
     const handleSaveProfile = async () => {
       try {
@@ -72,20 +75,39 @@ export default function EditProfile() {
     let intervalId;
     onLoad = () => {
         console.log("Componente montato");
-        intervalId = setInterval(() => {
-          console.log("E' passato un secondo!");
-        }, 5000);
+        getProfileInfo();
     }
   
     onUnload = () => {
       console.log("Componente smontato");
       clearInterval(intervalId);
     }
+
+    const getProfileInfo = async () => {
+        try {
+          setProfile(await getProfile());
+        } catch (error) {
+          console.error("Errore durante il recupero delle informazioni del profilo:", error);
+        }
+        setName(profile.firstName);
+        setSurname(profile.lastName);
+        setNameCard(profile.cardFullName);
+        setNumberCard(profile.cardNumber);
+        setCvv(profile.cardCVV);
+    }
     
     const putUserInfoAsync = async () => {
       try {
-        //await updateUserInfo(name, surname, nameCard, numberCard, dateCard, cvv);
-        invertEdit();
+        if (name == '' || surname == '' || nameCard == '' || numberCard == '' || dateCard == '' || cvv == '') {
+          alert("Compila tutti i campi per continuare");
+        } else {
+          try {
+            await updateUserInfo(name, surname, nameCard, numberCard, dateCard, cvv);
+          } catch (error) {
+            console.log("Errore durante l'aggiornamento del profilo:", error);
+          }
+          invertEdit();
+        }
       } catch (error) {
         console.error("Profile.jsx | Errore durante il recupero dei menù:", error);
         alert("Ci scusiamo, si è verificato un errore durante il recupero dei menù"); //Messaggio di errore da migliorare
@@ -102,6 +124,20 @@ export default function EditProfile() {
       onLoad()
       return onUnload;
     }, []);
+
+    useEffect(() => {
+      console.log("Name:", name);
+      if (!profile)
+        getProfileInfo();
+      else {
+        setName(profile.firstName);
+        setSurname(profile.lastName);
+        setNameCard(profile.cardFullName);
+        setNumberCard(profile.cardNumber);
+        setDateCard(profile.cardExpireMonth + '/' + profile.cardExpireYear);
+        setCvv(profile.cardCVV);
+      }
+    }, [profile]);
   
     return (
       <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>

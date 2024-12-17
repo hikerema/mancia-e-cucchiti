@@ -4,7 +4,7 @@ import { useEffect, useState} from 'react';
 
 import globalStyles from '../../styles/global.js'; //Stili
 
-//Servizzi
+//Servizi
 import { getMenuImage, isProfileCompleted, buyMenuRequest } from '../../services/RequestsManager.js';
 import { getMenuDetails } from '../../services/RequestsManager.js';
 
@@ -49,8 +49,12 @@ export default function Details({item, location, ...props}) {
   const buyMenu = async (item) => {
     const isCompleted = await isProfileCompleted()
     if (isCompleted) {
-      await buyMenuRequest(item, location.lat, location.lng);
-      //vai al dettaglio oridne
+      try {
+        await buyMenuRequest(item, location.latitude, location.longitude);
+      } catch (error) {
+        console.log("Errore nel menù da comprare");
+      }
+      //vai al dettaglio ordine
     } else {
       alert("Completa il tuo profilo prima di effettuare un ordine");
     }

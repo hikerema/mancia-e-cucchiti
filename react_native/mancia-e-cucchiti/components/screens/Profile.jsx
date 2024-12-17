@@ -100,7 +100,15 @@ export default function Profile({...props}) {
         <Text style={globalStyles.textScreenTitle}>Ciao, User!</Text>
       }
         <TouchableOpacity style={globalStyles.iconProfile} onPress={() => props.onButtonPressed()}>
-          <Text style={globalStyles.iconProfileText}>U</Text>
+          {profile && profile.firstName &&
+            <Text style={globalStyles.iconProfileText}>{profile.firstName.charAt(0)}</Text>
+          }
+          {profile && !profile.firstName &&
+            <Text style={globalStyles.iconProfileText}>U</Text>
+          }
+          {!profile &&
+            <Text style={globalStyles.iconProfileText}>U</Text>
+          }
         </TouchableOpacity>
       </View>
 
