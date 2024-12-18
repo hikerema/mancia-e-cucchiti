@@ -69,7 +69,14 @@ export default function Details({item, location, ...props}) {
     const isCompleted = await isProfileCompleted()
     if (isCompleted) {
       try {
-        await buyMenuRequest(item, location.latitude, location.longitude);
+        const response = await buyMenuRequest(item, location.latitude, location.longitude);
+        if(response.status === 200) {
+          props.onOrderPress();
+        }
+        if(response.status === 409) {
+          alert("Ordine già presente: non è possibile effettuare l'ordine");
+        }
+
       } catch (error) {
         console.log("Errore nel menù da comprare " + error);
       }

@@ -272,28 +272,29 @@ export const isProfileCompleted = async () => {
 }
 
 export const buyMenuRequest = async (menu, lat, lng) => {
-    try {
         const SID = await getSID();
         console.log("SID: ", SID);
         console.log("menu: ", menu.mid.toString());
         console.log("lat:", lat);
         console.log("lng:", lng);
 
-        const response = await axios.post(`${BASE_URL}/menu/${menu.mid.toString()}/buy`, {
+        const response = await fetch(`${BASE_URL}/menu/${menu.mid.toString()}/buy`, {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
             sid: SID,
             deliveryLocation: {
                 lat: lat,
                 lng: lng,
             }
+            })
         });
-        if (response.ok) {
-            await storageManager.setOrder(response.data);
+
+        if (response.status === 200) {
+            const data = await response.json();
+            await storageManager.setOrder(data);
         }
-        
-        return response.data;
-    } catch (error) {
-        console.error("Errore durante l'acquisto del menù:", error);
-        throw error;
-    }
-    
+        return response;
 }

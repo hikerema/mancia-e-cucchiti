@@ -9,6 +9,7 @@ import OrderState from './components/screens/OrderState';
 import Orders from './components/screens/Orders';
 import Details from './components/screens/Details';
 import EditProfile from './components/screens/editProfile';
+import OnDelivery from './components/screens/onDelivery.jsx';
 
 import NavBar from './components/NavBar'; //Componente per barra di navigazione
 
@@ -103,7 +104,7 @@ export default function App() {
   } else if (screen === 'details') {
     return (
       <View style={globalStyles.container}> 
-        <Details location={currentLocation} item={item} onButtonPressed={() => changeScreen(lastScreen)}/>
+        <Details location={currentLocation} item={item} onButtonPressed={() => changeScreen(lastScreen)} onOrderPress={() => changeScreen("onDelivery")}/>
       </View>
     );
   } else if (screen === 'editProfile') {
@@ -111,6 +112,13 @@ export default function App() {
       <View style={globalStyles.container}> 
         <EditProfile/>
         <NavBar activeScreen={screen} onNavigate={changeScreen} />
+      </View>
+    );
+  } else if(screen === 'onDelivery') {
+    return  (
+      <View style={globalStyles.container}>
+        <OnDelivery/>
+        
       </View>
     );
   }
