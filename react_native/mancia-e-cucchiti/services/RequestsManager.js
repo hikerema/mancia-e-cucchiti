@@ -201,6 +201,7 @@ export const updateUserInfo = async (name, surname, nameCard, numberCard, dateCa
 
         if (response.status === 204) {
             console.log("Aggiornamento completato con successo");
+            await storageManager.setProfileCompleted();
         } else {
             const errorData = await response.json();
             console.error("Errore durante l'aggiornamento:", errorData);

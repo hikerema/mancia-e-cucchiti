@@ -91,13 +91,13 @@ export default function Profile({...props}) {
 
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       {profile && profile.firstName &&
-        <Text style={[globalStyles.textScreenTitle]}>Ciao, {profile.firstName}!</Text>
+        <Text style={[globalStyles.textNameTitle]}>Ciao, {profile.firstName}!</Text>
       }
       {profile && !profile.firstName &&
-        <Text style={[globalStyles.textScreenTitle]}>Ciao, User!</Text>
+        <Text style={[globalStyles.textNameTitle]}>Ciao, User!</Text>
       }
       {!profile &&
-        <Text style={globalStyles.textScreenTitle}>Ciao, User!</Text>
+        <Text style={globalStyles.textNameTitle}>Ciao, User!</Text>
       }
         <TouchableOpacity style={globalStyles.iconProfile} onPress={() => props.onButtonPressed()}>
           {profile && profile.firstName &&

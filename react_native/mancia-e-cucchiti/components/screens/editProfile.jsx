@@ -143,10 +143,10 @@ export default function EditProfile() {
       <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>
         <StatusBar style="auto"></StatusBar>
         {name &&
-          <Text style={globalStyles.textScreenTitle}>Ciao, {name}!</Text>
+          <Text style={globalStyles.textNameTitle}>Ciao, {name}!</Text>
         }
         {!name &&
-          <Text style={globalStyles.textScreenTitle}>Ciao, User!</Text>
+          <Text style={globalStyles.textNameTitle}>Ciao, User!</Text>
         }
         <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
           <ScrollView contentContainerStyle={{ flexGrow: 1}}>

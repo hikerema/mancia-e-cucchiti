@@ -55,6 +55,14 @@ const globalStyles = StyleSheet.create({
     fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
     marginBottom: 10,
     fontWeight: '900',
+    },
+
+  textNameTitle: {
+    color: '#000', // Replace with a single color or implement gradient differently
+    fontSize: 35,
+    fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
+    marginBottom: 10,
+    fontWeight: '900',
     width: '80%',
   },
 

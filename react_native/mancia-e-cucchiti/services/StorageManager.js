@@ -169,8 +169,25 @@ const createOrdersTable = 'CREATE TABLE IF NOT EXISTS Orders (OrderID INTEGER PR
     }
   }
 
+  async setProfileCompleted() {
+    try {
+      await AsyncStorage.setItem('ProfileCompleted', 'true');
+      console.log("Profilo completato");
+    } catch (error) {
+      console.error("Errore durante il completamento del profilo:", error);
+    }
+  }
+
   async isProfileCompleted() {
     const isCompleted = await AsyncStorage.getItem('ProfileCompleted');
-    return true; //da implementare
+    if (isCompleted === null) {
+      return false;
+    }
+    else if (isCompleted === 'true') {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 }

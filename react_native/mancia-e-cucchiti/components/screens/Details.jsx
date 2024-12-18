@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, Button, TouchableOpacity, Image} from 'react-native';
+import { View, Text, Alert, TouchableOpacity, Image} from 'react-native';
 import { useEffect, useState} from 'react';
 
 import globalStyles from '../../styles/global.js'; //Stili
@@ -46,13 +46,32 @@ export default function Details({item, location, ...props}) {
     return onUnload;
   }, []);
 
+  const showConfirm = () => {
+    Alert.alert(
+      "Conferma il tuo ordine", // Titolo
+      "Sei sicuro di voler ordinare " + item.name + "?", // Messaggio
+      [
+        {
+          text: "Annulla",
+          onPress: () => console.log("Azione annullata"),
+          style: "cancel", // Stile del pulsante
+        },
+        {
+          text: "Confermo",
+          onPress: () => buyMenu(item),
+          style: "default", // Stile del pulsante
+        },
+      ]
+    );
+  };
+
   const buyMenu = async (item) => {
     const isCompleted = await isProfileCompleted()
     if (isCompleted) {
       try {
         await buyMenuRequest(item, location.latitude, location.longitude);
       } catch (error) {
-        console.log("Errore nel menù da comprare");
+        console.log("Errore nel menù da comprare " + error);
       }
       //vai al dettaglio ordine
     } else {
@@ -85,7 +104,7 @@ export default function Details({item, location, ...props}) {
           <Text style={globalStyles.detailsText}>{item.deliveryTime} min</Text>
         </View>
       </View>
-      <TouchableOpacity style={[globalStyles.buttonPrimary, globalStyles.buttonDetails]} onPress={() => buyMenu(item)}>
+      <TouchableOpacity style={[globalStyles.buttonPrimary, globalStyles.buttonDetails]} onPress={() => showConfirm()}>
         <Text style={globalStyles.buttonPrimaryText}>Ordina ora</Text>
       </TouchableOpacity>
     </View>
