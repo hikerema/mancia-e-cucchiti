@@ -15,6 +15,17 @@ const globalStyles = StyleSheet.create({
     fontFamily: 'Avenir',
   },
 
+  mapContainer: {
+    height: "50%",
+    marginTop:20,
+    borderRadius:16,
+    overflow:'hidden',
+  },
+
+  map: {
+    height: "100%",
+  },
+
   // Sfondi principali
   backgroundLight: {
     backgroundColor: '#fff', // Sfondo chiaro

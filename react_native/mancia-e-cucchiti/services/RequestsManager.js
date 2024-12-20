@@ -217,14 +217,10 @@ export const getDeliveredOrders = async () => {
     return await storageManager.getDeliveredOrders();
 }
 
-const getOrder = async (oid) => {
+export const getOrder = async (oid) => {
     try {
         const SID = await getSID();
-        const response = await axios.get(`${BASE_URL}/order/${oid}`, {
-            params: {
-                oid: oid,
-                sid: SID
-            },
+        const response = await axios.get(`${BASE_URL}/order/${oid}?sid=${SID}`, {
             headers: {
                 'Accept': 'application/json'
             }
