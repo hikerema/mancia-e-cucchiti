@@ -13,7 +13,7 @@ export default class StorageManager {
     const createUserTable = 'CREATE TABLE IF NOT EXISTS UserProfile (UID INTEGER PRIMARY KEY, Name TEXT NOT NULL, Surname TEXT NOT NULL);';
     const createPaymentData = 'CREATE TABLE IF NOT EXISTS PaymentData ( UID INTEGER PRIMARY KEY, Name TEXT NOT NULL, CardNumber TEXT NOT NULL, ExpirationDate TEXT NOT NULL, CVV TEXT NOT NULL);';
     const createMenusTable = 'CREATE TABLE IF NOT EXISTS Menus ( MenuID INTEGER NOT NULL, Image TEXT NOT NULL, Version DEFAULT -1 );';
-const createOrdersTable = 'CREATE TABLE IF NOT EXISTS Orders (OrderID INTEGER PRIMARY KEY, MenuID INTEGER NOT NULL, OrderDate TEXT NOT NULL, OrderStatus BOOLEAN NOT NULL);';
+    const createOrdersTable = 'CREATE TABLE IF NOT EXISTS Orders (OrderID INTEGER PRIMARY KEY, MenuID INTEGER NOT NULL, OrderDate TEXT NOT NULL, OrderStatus BOOLEAN NOT NULL);';
     //Creazione tabelle
     await this.db.execAsync(createUserTable);
     await this.db.execAsync(createPaymentData);
@@ -30,8 +30,6 @@ const createOrdersTable = 'CREATE TABLE IF NOT EXISTS Orders (OrderID INTEGER PR
     const SID = await AsyncStorage.getItem('SID');
     if (SID === null) {
       throw new Error("SID non presente nel AsyncStorage");
-    } else {
-      console.log('SM | SID restituito correttamente:' + SID);
     }
     return SID;
   } // Recupero del SID dal disco tramite AsyncStorage
@@ -45,7 +43,6 @@ const createOrdersTable = 'CREATE TABLE IF NOT EXISTS Orders (OrderID INTEGER PR
   async getUID() {
     return await AsyncStorage.getItem('UID');
   } // Recupero dell'UID dal disco tramite AsyncStorage
-
 
   // Gestione profilo utente
   async setUserProfile(uid, name, surname) {
@@ -73,6 +70,7 @@ const createOrdersTable = 'CREATE TABLE IF NOT EXISTS Orders (OrderID INTEGER PR
       });
     });
   }
+
   async getPaymentData() {
     const query = `SELECT * FROM PaymentData`;
     return new Promise((resolve, reject) => {
@@ -128,14 +126,14 @@ const createOrdersTable = 'CREATE TABLE IF NOT EXISTS Orders (OrderID INTEGER PR
   }// Recupero della versione dell'immagine del menù dal database
 
   async setOrder(order) {
-    try {
+    /*try {
       const query = `INSERT INTO Orders (OrderID, MenuID, OrderDate, OrderStatus) VALUES (?, ?, ?, ?)`;
       const r = await this.db.runAsync(query, [order.oid, order.mid, order.creationTimestamp, false]);
       console.log("Ordine salvato correttamente");
     }
     catch (error) {
       console.error("Errore durante il salvataggio dell'ordine:", error);
-    }
+    }*/
   }
 
   async setOrderStatus(OrderID, OrderStatus) {
@@ -172,7 +170,6 @@ const createOrdersTable = 'CREATE TABLE IF NOT EXISTS Orders (OrderID INTEGER PR
   async setProfileCompleted() {
     try {
       await AsyncStorage.setItem('ProfileCompleted', 'true');
-      console.log("Profilo completato");
     } catch (error) {
       console.error("Errore durante il completamento del profilo:", error);
     }

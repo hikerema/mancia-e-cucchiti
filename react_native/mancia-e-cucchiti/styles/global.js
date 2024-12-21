@@ -77,6 +77,22 @@ const globalStyles = StyleSheet.create({
     width: '80%',
   },
 
+  textOrderDetails: {
+    color: '#444', // Replace with a single color or implement gradient differently
+    fontSize: 19,
+    fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
+    marginBottom: 10,
+    marginLeft: 15,
+  },
+
+  textOrderDetailsTitle: {
+    color: '#000', // Replace with a single color or implement gradient differently
+    fontSize: 20,
+    fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
+    fontWeight: '200',
+    marginLeft: 15,
+  },  
+
   // Bottoni
   buttonPrimary: {
     backgroundColor: '#e68231', // Arancione

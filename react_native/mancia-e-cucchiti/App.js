@@ -80,7 +80,7 @@ export default function App() {
     changeScreen('details');
   } //Imposta l'item selezionato e cambia la schermata a 'details'
 
-  if (screen === 'menuo') {
+  if (screen === 'menu') {
     return (
       <View style={globalStyles.container}> 
         <Menu location={currentLocation} onButtonPressed={(item) => details(item)} />
@@ -114,10 +114,10 @@ export default function App() {
         <NavBar activeScreen={screen} onNavigate={changeScreen} />
       </View>
     );
-  } else if(screen === 'menu') {
+  } else if(screen === 'onDelivery') {
     return  (
       <View style={globalStyles.container}>
-        <OnDelivery/>
+        <OnDelivery onButtonPressed={() => changeScreen(lastScreen)}/>
         
       </View>
     );

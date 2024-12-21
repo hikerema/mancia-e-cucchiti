@@ -1,19 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 
 import { getProfile, getOrder, getMenuByMid } from '../../services/RequestsManager.js';
 
 import globalStyles from '../../styles/global.js'; //Stili
 
+
+import goBackIcon from '../../assets/icons/goBack.png';
+
 import MapView, { Marker } from 'react-native-maps';
 
 
-export default function OnDelivery() {
+export default function OnDelivery({ ...props }) {
     const [intervalId, setIntervalId] = useState(null); //Stato per l'intervallo di aggiornamento dei
 
     const estimatedArrivalTime = "15:30"; // Orario presunto di arrivo
-    const coordinate = { latitude: 45.4642, longitude: 9.19 }; // Coordinate dell'icona
     const [currentLocation, setCurrentLocation] = useState(null); //Stato per la posizione attuale del drone
     const [latD, setLatD] = useState(0.09); //Stato per la latitudine del drone
     const [lonD, setLonD] = useState(0.04); //Stato per la longitudine del drone
@@ -26,24 +28,29 @@ export default function OnDelivery() {
             const profile = await getProfile();
             setLastOid(profile.lastOid);
         } catch (error) {
-            console.error("OnDelivery.jsx | Errore durante il recupero dell'ultimo ordine:", error);
-            alert("Ci scusiamo, si è verificato un errore durante il recupero dell'ultimo ordine"); //Messaggio di errore da migliorare
+            console.error("OnDelivery.jsx | Errore durante il recupero dell' LastOid:", error);
+            alert("OnDelivery.jsx | Errore durante il recupero dell' LastOid:"); //Messaggio di errore da migliorare
         }
     }
 
     const fetchOrder = async () => {
-        try {
-            const order = await getOrder(lastOid);
-            setOrder(order);
-        } catch (error) {
-            console.error("OnDelivery.jsx | Errore durante il recupero dell'ultimo ordine:", error);
-            alert("Ci scusiamo, si è verificato un errore durante il recupero dell'ultimo ordine"); //Messaggio di errore da migliorare
+        if (lastOid) {
+            try {
+                const r = await getOrder(lastOid.toString());
+                setOrder(r);
+            } catch (error) {
+                console.error("OnDelivery.jsx | Errore durante il recupero dell'ultimo ordine:", error);
+                alert("Ci scusiamo, si è verificato un errore durante il recupero dell'ultimo ordine"); //Messaggio di errore da migliorare
+            }
+        } else {
+            fetchLastOid();
         }
     }
 
     const fetchMenu = async () => {
         if (order) {
-            const menu = await getMenuByMid(order.mid);
+            console.log(typeof order.mid);
+            const menu = await getMenuByMid(order.mid, order.deliveryLocation.lat, order.deliveryLocation.lng);
             setMenu(menu);
         }
     }
@@ -67,7 +74,12 @@ export default function OnDelivery() {
         const id = setInterval(() => {
             console.log("Aggiornamento mappa");
             fetchOrder();
-
+            if (order) {
+                setCurrentLocation(order.currentPosition);
+                console.log("Posizione attuale: ", order.currentPosition);
+            } else {
+                console.log("Nessuna posizione attuale");
+            }
         }, 5000); //Aggiorna la mappa ogni 5 secondi
         setIntervalId(id);
     }; 
@@ -80,27 +92,41 @@ export default function OnDelivery() {
     return (
         <View style={globalStyles.screenContainer}>
             <StatusBar style="auto" />
-            <Text style={globalStyles.textScreenTitle}>Ordine in consegna</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <TouchableOpacity onPress={() => props.onButtonPressed()} style={[globalStyles.backButton, globalStyles.textScreenTitle]}>
+                    <Image source={goBackIcon} style={[globalStyles.backButtonIcon]} />
+                </TouchableOpacity>
+                <Text style={globalStyles.textScreenTitle}>Ordine in consegna</Text>
+            </View>
+            {currentLocation &&
             <View style={globalStyles.mapContainer}>
                 <MapView
                     style={globalStyles.map}
                     initialRegion={{
-                        latitude: coordinate.latitude,
-                        longitude: coordinate.longitude,
+                        latitude: currentLocation.lat,
+                        longitude: currentLocation.lng,
                         latitudeDelta: latD,
                         longitudeDelta: lonD,
                     }}
                 >
-                    <Marker coordinate={coordinate} title="Posizione attuale" description={`Orario presunto di arrivo: ${estimatedArrivalTime}`} />
+                    <Marker coordinate={{latitude: currentLocation.lat, longitude: currentLocation.lng}} title="Posizione attuale" description={`Orario presunto di arrivo: ${estimatedArrivalTime}`} />
                 </MapView>
             </View>
-            <View style={globalStyles.container}>
-                <Text style={globalStyles.textPrimary}>Orario presunto di arrivo: {estimatedArrivalTime}</Text>
-                {menu &&
-                    <Text style={globalStyles.textPrimary}>{menu.name}</Text>
-                }
-                
-            </View>
+            }
+            {menu &&
+                <View style={globalStyles.container}>
+                    <Text style={globalStyles.textScreenSubtitle}>Riepilogo del ordine:</Text>
+                    <Text style={globalStyles.textOrderDetailsTitle}>Orario presunto di arrivo:</Text>
+                    <Text style={globalStyles.textOrderDetails}>19:00</Text>
+                    <Text style={globalStyles.textOrderDetailsTitle}>{menu.name}</Text>
+                    <Text style={globalStyles.textOrderDetails}>{menu.shortDescription}</Text>
+                </View>
+            }
+            {!menu &&
+                <View style={globalStyles.container}>
+                    <Text>Non funziona nulla, bocciaci prof</Text>
+                </View>
+            }
         </View>
     );
 }

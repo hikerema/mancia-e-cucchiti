@@ -10,12 +10,10 @@ storageManager.initializeDB();
 
 export const getSID = async() => {
     try {
-        console.log("Tento di ottenere il SID dal disco");
         let SID = await storageManager.getSID();
         return SID;
     }
     catch (error) {
-        console.log("Il tentativo di ottenere il SID dal disco è fallito, provo a richiederlo al server");
         try {
             const response = await fetch(BASE_URL + "/User", {
                 method: 'POST',
@@ -60,25 +58,20 @@ export const getMenus = async (lat, lng) => {
 }
 
 export const getMenuImage = async (mid, imageVersion) => {
-    console.log("Richiesta immagine al disco per: " + mid);
     try {
         const storedImageVersion = await storageManager.getImageVersion(mid);
         if (storedImageVersion !== null) {
             if (storedImageVersion === imageVersion) {
                 const image = await storageManager.getMenuImage(mid);
                 if (image !== null) {
-                    console.log("Immagine aggiornata per: " + mid);
                     return image;
                 } else {
-                    console.log("Immagine non presente (errore di salvataggi pregresso) per: " + mid);
                     return await getServerImage(mid, imageVersion);
                 }
             } else {
-                console.log("Versione immagine non aggiornata per: " + mid);
                 return await getServerImage(mid, imageVersion);
             }
         } else {
-            console.log("Versione immagine non presente per: " + mid);
             return await getServerImage(mid, imageVersion);
         }
     } catch (error) {
@@ -130,7 +123,6 @@ export const getMenuByMid = async (mid, lat, lng) => {
 }
 
 const getServerImage = async (mid, imageVersion) => {
-    console.log("Richiedo immagine al server per: " + mid);
     try {
         const SID = await getSID();
         const response = await axios.get(`${BASE_URL}/menu/${mid}/image`, {
@@ -150,14 +142,10 @@ const getServerImage = async (mid, imageVersion) => {
 
 }  //Dovrebbe essere completato
 
-//Fino a qui funziona
-//Tento di recuperare l'UID
 export const getUID = async () => {
     try {
-        console.log("Tento di ottenere l'UID dal disco");
         let UID = await storageManager.getUID();
         if (!UID) {
-            console.log("L'UID non è presente nel disco, provo a ottenerlo tramite getSID");
             await getSID();
             UID = await storageManager.getUID();
         }
@@ -167,9 +155,8 @@ export const getUID = async () => {
         console.error("Errore durante il recupero dell'UID:", error);
         return null;
     }
-}
+} //Cerca l'UID tramite lo StorageManager, se non lo trova chiama getSID e lo restituisce
 
-//Cerco di memorizzare le info dell'user
 export const updateUserInfo = async (name, surname, nameCard, numberCard, dateCard, cvv) => {
     month = dateCard.split("/")[0];
     year = dateCard.split("/")[1];
@@ -200,7 +187,6 @@ export const updateUserInfo = async (name, surname, nameCard, numberCard, dateCa
         });
 
         if (response.status === 204) {
-            console.log("Aggiornamento completato con successo");
             await storageManager.setProfileCompleted();
         } else {
             const errorData = await response.json();
@@ -211,26 +197,31 @@ export const updateUserInfo = async (name, surname, nameCard, numberCard, dateCa
         console.error("Errore durante l'aggiornamento delle informazioni utente:", error);
         throw error;
     }
-}
+} //Aggiorna le informazioni dell'utente
 
 export const getDeliveredOrders = async () => {
     return await storageManager.getDeliveredOrders();
-}
+} //Restituisce gli ordini consegnati
 
 export const getOrder = async (oid) => {
     try {
         const SID = await getSID();
-        const response = await axios.get(`${BASE_URL}/order/${oid}?sid=${SID}`, {
+        const response = await fetch(`${BASE_URL}/order/${oid}?sid=${SID}`, {
             headers: {
                 'Accept': 'application/json'
             }
         });
-        return response.data;
+        console.log ("Response: ", response.status);
+        if (response.ok) {
+            return await response.data;
+        } else {
+            throw new Error("Errore durante il recupero dell'ordine");
+        }
     } catch (error) {
         console.error("Errore durante il recupero dell'ordine:", error);
         throw error;
     }
-}
+} //Restituisce l'ordine con l'oid specificato
 
 export const getProfile = async () => {
     try {
@@ -250,7 +241,7 @@ export const getProfile = async () => {
         console.error("Errore durante il recupero dell'ultimo ordine:", error);
         throw error;
     }
-}
+} //Restituisce il profilo dell'utente
 
 export const getOnDeliveryOrders = async () => {
     var onDeliveryOrders = [];
@@ -261,11 +252,11 @@ export const getOnDeliveryOrders = async () => {
         onDeliveryOrders.push(order);
     }
     return onDeliveryOrders;
-}
+} //Restituisce gli ordini in consegna
 
 export const isProfileCompleted = async () => {
     return await storageManager.isProfileCompleted();
-}
+} //Restituisce true se il profilo è completo, false altrimenti
 
 export const buyMenuRequest = async (menu, lat, lng) => {
         const SID = await getSID();
@@ -293,4 +284,4 @@ export const buyMenuRequest = async (menu, lat, lng) => {
             await storageManager.setOrder(data);
         }
         return response;
-}
+} //Effettua la richiesta di acquisto di un menù

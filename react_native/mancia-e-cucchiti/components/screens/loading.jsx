@@ -25,6 +25,7 @@ export default function Loading(props) {
   
     return (
         <View style={[globalStyles.screenContainer, globalStyles.backgroundOrange]}>
+            <StatusBar style="auto"/>
             <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
               <Image
                 source={loadingImage}
