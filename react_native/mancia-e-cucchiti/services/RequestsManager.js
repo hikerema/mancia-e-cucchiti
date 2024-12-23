@@ -212,8 +212,8 @@ export const getOrder = async (oid) => {
             }
         });
         console.log ("Response: ", response.status);
-        if (response.ok) {
-            return await response.data;
+        if (response.status === 200) {
+            return await response.json();
         } else {
             throw new Error("Errore durante il recupero dell'ordine");
         }

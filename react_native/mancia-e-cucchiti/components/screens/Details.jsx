@@ -25,19 +25,15 @@ export default function Details({item, location, ...props}) {
     setDetails(details);
   }
 
-  let intervalId;
   onLoad = () => {
       console.log("Componente Details montato");
       fetchImage();
       fetchDetails();
-      intervalId = setInterval(() => {
-        console.log(image);
-      }, 5000);
+      
   }
 
   onUnload = () => {
     console.log("Componente Details smontato");
-    clearInterval(intervalId);
   }
   
   // const 
