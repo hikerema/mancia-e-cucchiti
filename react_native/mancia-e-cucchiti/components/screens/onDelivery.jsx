@@ -24,7 +24,6 @@ export default function OnDelivery() {
       try {
         const profile = await getProfile();
         lastOid = profile.lastOid;
-        console.log("LastOid: ", profile.lastOid);
       } catch (error) {
         console.error("OnDelivery.jsx | Errore durante il recupero dell' LastOid:", error);
       }
@@ -34,7 +33,6 @@ export default function OnDelivery() {
       if (oid) {
         try {
           const r = await getOrder(oid.toString());
-          console.log("Ordine recuperato correttamente");
           setOrder(r);
         } catch (error) {
           console.error("OnDelivery.jsx | Errore durante il recupero dell'ordine:", error);
@@ -58,12 +56,10 @@ export default function OnDelivery() {
     } //Metodo per ottenere l'ultimo oid dell'utente
 
     const updateMap = async () => {
-        console.log("Aggiornamento posizione attuale");
         if (5 == 5) {
-            console.log(getLastOid());
             await fetchOrder(getLastOid());
         } else {
-          console.error("Nessun ordine disponibile");
+          console.error("OnDelivery.jsx | Nessun ordine disponibile");
         }
     };
 
@@ -94,7 +90,6 @@ export default function OnDelivery() {
 
     useEffect(() => {
       if (order?.currentPosition) {
-        console.log("Posizione attuale disponibile");
         setCurrentLocation(order.currentPosition);
       } else {
         updateMap();
@@ -105,7 +100,6 @@ export default function OnDelivery() {
       if (!intervalId) {
         const id = setInterval(() => {
           updateMap();
-          console.log("Aggiornamento posizione attuale");
         }, 5000);
         setIntervalId(id);
       }

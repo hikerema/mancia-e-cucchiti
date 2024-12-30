@@ -12,7 +12,6 @@ import { getMenus } from '../../services/RequestsManager.js';
 export default function Menu({location, ...props }) {
   const [menus, setMenus] = useState([]); //Stato per i menù, slvo i menu che verranno visualizzati
   const [intervalId, setIntervalId] = useState(null); //Stato per l'intervallo di aggiornamento dei menù  
-  const [completed, setCompleted] = useState(false); //Stato per il completamento del profilo
 
   const getMenusAsync = async () => {
     try {
@@ -30,8 +29,8 @@ export default function Menu({location, ...props }) {
 
   const onLoad = () => {
     console.log("Componente Menù montato"); 
-      getMenusAsync();
-    const id = setInterval(() => {
+      getMenusAsync();    
+      const id = setInterval(() => {
       getMenusAsync();
     }, 60000); //Aggiorna i menù ogni minuto
     setIntervalId(id);
@@ -46,16 +45,6 @@ export default function Menu({location, ...props }) {
     <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>
       <StatusBar style="auto"/>
       <Text style={globalStyles.textScreenTitle}>Menù</Text>
-
-      {!completed &&
-          <View style={[globalStyles.completeProfileCard]}>
-            <Text style={globalStyles.completeProfileCardTitle}>Manca ancora un piccolo passaggio!</Text>
-            <Text style={globalStyles.completeProfileCardText}>Prima di poter ordinare un menù è necessario completare il tuo profilo</Text>
-            <TouchableOpacity style={globalStyles.completeProfileCardButtonPrimary} onPress={setCompleted(true)}>
-              <Text style={globalStyles.completeProfileButtonText}>Completa il profilo</Text>
-            </TouchableOpacity>
-          </View>
-      }
 
       <FlatList {...props}
         data={menus}

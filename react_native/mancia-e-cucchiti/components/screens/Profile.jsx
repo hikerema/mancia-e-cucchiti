@@ -7,6 +7,9 @@ import globalStyles from '../../styles/global.js'; //Stili
 //Servizzi
 import { getProfile, getOrder, getMenuByMid, getMenuImage} from '../../services/RequestsManager.js';
 
+//componenti
+import MenuItem from '../MenuItem.jsx';
+
 
 export default function Profile({...props}) {
   const [image, setImage] = useState(null);
@@ -18,7 +21,7 @@ export default function Profile({...props}) {
     try {
       setProfile(await getProfile());
     } catch (error) {
-      console.error("Errore durante il recupero delle informazioni del profilo:", error);
+      console.error("Profile.jsx | Errore durante il recupero delle informazioni del profilo:", error);
     }
   }
   const getOrderAsync = async () => {
@@ -30,7 +33,7 @@ export default function Profile({...props}) {
       }
 
     } catch (error) {
-      console.error("Errore durante il recupero degli ordini:", error);
+      console.error("Profile.jsx | Errore durante il recupero degli ordini:", error);
       alert("Ci scusiamo, si è verificato un errore durante il recupero degli ordini");
     }
   } //Metodo per ottenere gli ordini tramite il requestManager
@@ -40,7 +43,7 @@ export default function Profile({...props}) {
     try {
       setMenu(await getMenuByMid(order.mid, order.deliveryLocation.lat, order.deliveryLocation.lng)); 
     } catch (error) {
-      console.error("Errore durante il recupero delle informazioni", error);
+      console.error("Profile.jsx | Errore durante il recupero delle informazioni", error);
     } 
   }
 
@@ -49,7 +52,7 @@ export default function Profile({...props}) {
       if (menu === null) return;
       setImage(await getMenuImage(menu.mid, menu.imageVersion));
     } catch (error) {
-      console.error("Errore durante il recupero dell'immagine", error);
+      console.error("Profile.jsx | Errore durante il recupero dell'immagine", error);
     }
   }
 
@@ -99,7 +102,7 @@ export default function Profile({...props}) {
       {!profile &&
         <Text style={globalStyles.textNameTitle}>Ciao, User!</Text>
       }
-        <TouchableOpacity style={globalStyles.iconProfile} onPress={() => props.onButtonPressed()}>
+        <TouchableOpacity style={globalStyles.iconProfile} onPress={() => props.goToScreen("editProfile")}>
           {profile && profile.firstName &&
             <Text style={globalStyles.iconProfileText}>{profile.firstName.charAt(0)}</Text>
           }
@@ -115,23 +118,17 @@ export default function Profile({...props}) {
       <Text style={globalStyles.textScreenSubtitle}>Il tuo ultimo ordine</Text>
 
       {menu &&
-        <View style={[globalStyles.card]}>
-          {image && (
-            <Image
-              source={{ uri: `data:image/jpeg;base64,${image}` }}
-              style={globalStyles.cardImage}
-            />
-          )}
-          <View style={globalStyles.content}>
-            <Text style={globalStyles.cardTitle}>{menu.name}</Text>
-            <Text style={globalStyles.cardText} numberOfLines={2}>
-              {menu.shortDescription}
-            </Text>
-            <View style={globalStyles.footer}>
-              <Text style={globalStyles.price}>€{menu.price}</Text>
-              <Text style={globalStyles.deliveryTime}>Consegna: {menu.deliveryTime} min</Text>
-            </View>
-          </View>
+        <View>
+          <MenuItem 
+            item={menu} 
+            onPress={() => {
+              if (order?.status === 'COMPLETED') {
+                props.onButtonPressed(menu);
+              } else {
+                props.goToScreen('onDelivery');
+              }
+            }}
+          />
         </View>
       }
       {!menu &&
@@ -139,7 +136,7 @@ export default function Profile({...props}) {
           <Text style={globalStyles.VoidOrderText}>Non hai ancora effettuato ordini</Text>
         </View>
       }
-      <TouchableOpacity style={globalStyles.AccentContainer} onPress={() => props.onButtonPressed()}>
+      <TouchableOpacity style={globalStyles.AccentContainer} onPress={() => props.goToScreen("editProfile")}>
         <Text style={globalStyles.textAccent}>Modifica il tuo profilo</Text>
       </TouchableOpacity>
     </View>

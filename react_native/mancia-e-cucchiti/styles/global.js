@@ -15,6 +15,27 @@ const globalStyles = StyleSheet.create({
     fontFamily: 'Avenir',
   },
 
+  completeProfileButtonText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+    fontFamily: 'Avenir',
+  },
+
+  textOrderDetailsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#222',
+    marginVertical: 8,
+  },
+
+  textOrderDetails: {
+    color: '#7D7D7D', // Testo secondario
+    fontSize: 18,
+    marginVertical: 4,
+  },
+
+  // Mappa
   mapContainer: {
     height: "50%",
     marginTop:20,
@@ -26,12 +47,9 @@ const globalStyles = StyleSheet.create({
     height: "100%",
   },
 
-  // Sfondi principali
+  // Sfondi
   backgroundLight: {
     backgroundColor: '#fff', // Sfondo chiaro
-  },
-  backgroundDark: {
-    backgroundColor: '#1A1A1A', // Sfondo scuro
   },
   backgroundOrange: {
     backgroundColor: '#e68231', // Arancione
@@ -43,21 +61,18 @@ const globalStyles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
   },
-  textSecondary: {
-    color: '#7D7D7D', // Testo secondario
-    fontSize: 14,
-    fontFamily: 'System',
-  },
-  textAccent: {
-    color: '#e4953b', // Colore accento (es. link)
-    fontSize: 18,
-    fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
-    textAlign: 'center',
-  },
 
   AccentContainer: {
+    margin : 10,
     alignContent: 'center',
     alignItems: 'center',
+  },
+
+  textAccent: {
+    color: '#e68231', // Arancione
+    fontSize: 18,
+    fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
+    textDecorationLine: 'underline',
   },
 
   textScreenTitle: {
@@ -77,22 +92,6 @@ const globalStyles = StyleSheet.create({
     width: '80%',
   },
 
-  textOrderDetails: {
-    color: '#444', // Replace with a single color or implement gradient differently
-    fontSize: 19,
-    fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
-    marginBottom: 10,
-    marginLeft: 15,
-  },
-
-  textOrderDetailsTitle: {
-    color: '#000', // Replace with a single color or implement gradient differently
-    fontSize: 20,
-    fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
-    fontWeight: '200',
-    marginLeft: 15,
-  },  
-
   // Bottoni
   buttonPrimary: {
     backgroundColor: '#e68231', // Arancione
@@ -107,62 +106,12 @@ const globalStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
   },
-  buttonSecondary: {
-    borderColor: '#004AAD', // Blu outline
-    borderWidth: 2,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonSecondaryText: {
-    color: '#004AAD', // Testo blu
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
   backButton: {
     paddingRight: 10,
   },
   backButtonIcon: {
     width: 22,
     height: 22,
-  },
-
-  completeProfileCard: {
-    backgroundColor: '#fdfdfd',
-    shadowColor: '#e68231',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-    borderRadius: 25,
-    padding: 16,
-  },
-  completeProfileCardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    fontFamily: 'Avenir',
-  },
-  completeProfileCardText: {
-    color: '#333', // Testo secondario
-    fontSize: 16,
-    fontFamily: 'Avenir',
-  },
-  completeProfileCardButtonPrimary: {
-    backgroundColor: '#e68231', // Arancione
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 9,
-    alignItems: 'center',
-    marginTop: 16,
-  },
-
-  completeProfileButtonText: {
-    color: '#FFFFFF', // Testo bianco
-    fontSize: 16,
-    fontWeight: 'bold',
-    fontFamily: 'Avenir', // Sostituisci con il font scelto se diverso
   },
 
   inputContainer: {

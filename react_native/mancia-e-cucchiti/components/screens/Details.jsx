@@ -9,7 +9,7 @@ import { getMenuImage, isProfileCompleted, buyMenuRequest } from '../../services
 import { getMenuDetails } from '../../services/RequestsManager.js';
 
 //Icone
-import goBakcIcon from '../../assets/icons/goBack.png';
+import goBackIcon from '../../assets/icons/goBack.png';
 
 export default function Details({item, location, ...props}) {
   const [image, setImage] = useState(null); //Stato per l'immagine del menù
@@ -71,7 +71,7 @@ export default function Details({item, location, ...props}) {
         }
 
       } catch (error) {
-        console.log("Errore nel menù da comprare " + error);
+        console.log("Details.jsx | Errore nel acquisto del menu " + error);
       }
     } else {
       alert("Completa il tuo profilo prima di effettuare un ordine");
@@ -83,7 +83,7 @@ export default function Details({item, location, ...props}) {
       <StatusBar style="auto" />
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <TouchableOpacity onPress={() => props.onButtonPressed()} style={[globalStyles.backButton, globalStyles.textScreenTitle]}>
-          <Image source={goBakcIcon} style={[globalStyles.backButtonIcon]} />
+          <Image source={goBackIcon} style={[globalStyles.backButtonIcon]} />
         </TouchableOpacity>
         <Text style={[globalStyles.textScreenTitle]}>{item.name}</Text>
       </View>

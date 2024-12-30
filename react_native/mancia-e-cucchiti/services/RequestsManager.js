@@ -30,7 +30,7 @@ export const getSID = async() => {
                 return SID;
             }
         } catch (error) {
-            console.error("Errore insapettato, probabilmente è impossibile raggiungere il server: " + error);
+            console.error("RM | Errore insapettato, probabilmente è impossibile raggiungere il server: " + error);
             return null;
         }
     }
@@ -39,7 +39,6 @@ export const getSID = async() => {
 export const getMenus = async (lat, lng) => {
     try {
         const SID = await getSID();
-        console.log("SID: " + SID);
         const response = await axios.get(`${BASE_URL}/menu`, {
             params: {
                 lat: lat,
@@ -52,7 +51,7 @@ export const getMenus = async (lat, lng) => {
         });
         return response.data;
     } catch (error) {
-        console.error("Errore durante  il recupero dei menù:", error);
+        console.error("RM | Errore durante  il recupero dei menù:", error);
         throw error;
     }
 }
@@ -75,7 +74,7 @@ export const getMenuImage = async (mid, imageVersion) => {
             return await getServerImage(mid, imageVersion);
         }
     } catch (error) {
-        console.error("Errore insapsettato durante il recupero dell'immagine dal disco: ", error);
+        console.error("RM | Errore insapsettato durante il recupero dell'immagine dal disco: ", error);
         return await getServerImage(mid, imageVersion);
     }
 }
@@ -96,7 +95,7 @@ export const getMenuDetails = async (menu) => {
         });
         return response.data;
     } catch (error) {
-        console.error("Errore durante il recupero dei dettagli del menù:", error);
+        console.error("RM | Errore durante il recupero dei dettagli del menù:", error);
         throw error;
     }
 }
@@ -117,7 +116,7 @@ export const getMenuByMid = async (mid, lat, lng) => {
         });
         return response.data;
     } catch (error) {
-        console.error("Errore durante il recupero dei dettagli del menù:", error);
+        console.error("RM | Errore durante il recupero dei dettagli del menù:", error);
         throw error;
     }
 }
@@ -137,7 +136,7 @@ const getServerImage = async (mid, imageVersion) => {
         await storageManager.setMenuImage(mid, response.data.base64, imageVersion);
         return response.data.base64;
     } catch (error) {
-        console.error("Errore durante il recupero dell'immagine del menù dal server: ", error);
+        console.error("RM | Errore durante il recupero dell'immagine del menù dal server: ", error);
     }
 
 }  //Dovrebbe essere completato
@@ -149,10 +148,9 @@ export const getUID = async () => {
             await getSID();
             UID = await storageManager.getUID();
         }
-        console.log("UID: " + UID);
         return UID;
     } catch (error) {
-        console.error("Errore durante il recupero dell'UID:", error);
+        console.error("RM | Errore durante il recupero dell'UID:", error);
         return null;
     }
 } //Cerca l'UID tramite lo StorageManager, se non lo trova chiama getSID e lo restituisce
@@ -188,11 +186,11 @@ export const updateUserInfo = async (name, surname, nameCard, numberCard, month,
             await storageManager.setProfileCompleted();
         } else {
             const errorData = await response.json();
-            console.error("Errore durante l'aggiornamento:", errorData);
+            console.error("RM | Errore durante l'aggiornamento del profilo:", errorData);
             throw new Error(errorData.message || "Errore durante l'aggiornamento.");
         }
     } catch (error) {
-        console.error("Errore durante l'aggiornamento delle informazioni utente:", error);
+        console.error("RM | Errore durante l'aggiornamento delle informazioni utente:", error);
         throw error;
     }
 } //Aggiorna le informazioni dell'utente
@@ -209,14 +207,13 @@ export const getOrder = async (oid) => {
                 'Accept': 'application/json'
             }
         });
-        console.log ("Response: ", response.status);
         if (response.status === 200) {
             return await response.json();
         } else {
-            throw new Error("Errore durante il recupero dell'ordine");
+            throw new Error("throws by RM | Errore durante il recupero dell'ordine");
         }
     } catch (error) {
-        console.error("Errore durante il recupero dell'ordine:", error);
+        console.error("RM | Errore durante il recupero dell'ordine:", error);
         throw error;
     }
 } //Restituisce l'ordine con l'oid specificato
@@ -236,7 +233,7 @@ export const getProfile = async () => {
         });
         return response.data;
     } catch (error) {
-        console.error("Errore durante il recupero dell'ultimo ordine:", error);
+        console.error("RM | Errore durante il recupero dell'ultimo ordine:", error);
         throw error;
     }
 } //Restituisce il profilo dell'utente
@@ -258,11 +255,6 @@ export const isProfileCompleted = async () => {
 
 export const buyMenuRequest = async (menu, lat, lng) => {
         const SID = await getSID();
-        console.log("SID: ", SID);
-        console.log("menu: ", menu.mid.toString());
-        console.log("lat:", lat);
-        console.log("lng:", lng);
-
         const response = await fetch(`${BASE_URL}/menu/${menu.mid.toString()}/buy`, {
             method: 'POST',
             headers: {
@@ -279,7 +271,6 @@ export const buyMenuRequest = async (menu, lat, lng) => {
 
         if (response.status === 200) {
             const data = await response.json();
-            await storageManager.setOrder(data);
         }
         return response;
 } //Effettua la richiesta di acquisto di un menù

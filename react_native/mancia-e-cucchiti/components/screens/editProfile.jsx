@@ -1,12 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Image } from 'react-native';
 import { useEffect, useState } from 'react';
 
 import globalStyles from '../../styles/global.js'; //stili
 
 import { updateUserInfo, getProfile } from '../../services/RequestsManager.js'; //servizi
 
-export default function EditProfile() {
+import goBackIcon from '../../assets/icons/goBack.png'; //icone
+
+export default function EditProfile(props) {
   //dati che verranno inseriti dall'utente e inviati al server
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
@@ -41,7 +43,7 @@ export default function EditProfile() {
 
   // Verifica che il mese di scadenza sia compreso tra 1 e 12
   const handleMonthChange = () => {
-    month = parseInt(dateCardM);
+    const month = parseInt(dateCardM);
     setdateCardMValid((month >= 1 && month <= 12) || dateCardM == '');
   };
 
@@ -68,7 +70,7 @@ export default function EditProfile() {
     try {
       setProfile(await getProfile());
     } catch (error) {
-      console.error("Errore durante il recupero delle informazioni del profilo:", error);
+      console.error("editProfile.jsx | Errore durante il recupero delle informazioni del profilo:", error);
     }
     setName(profile.firstName);
   } //richiede le informazioni del profilo trami il RequestManager e imposto lo stato del nome
@@ -81,12 +83,12 @@ export default function EditProfile() {
         try {
           await updateUserInfo(name, surname, nameCard, numberCard, dateCardM, dateCardY, cvv);
         } catch (error) {
-          console.log("Errore durante l'aggiornamento del profilo:", error);
+          console.error("editProfile.jsx | Errore durante l'aggiornamento del profilo:", error);
         }
         invertEdit();
       }
     } catch (error) {
-      console.error("Profile.jsx | Errore durante il recupero dei menù:", error);
+      console.error("editProfile.jsx | | Errore durante il recupero dei menù:", error);
       alert("Ci scusiamo, si è verificato un errore durante il recupero dei menù"); //Messaggio di errore da migliorare
     }
   } //invia le informazioni del profilo al server tramite il RequestManager
@@ -97,7 +99,6 @@ export default function EditProfile() {
   } //inverte lo stato di edit e editable
 
   useEffect(() => {
-    console.log("Name:", name);
     if (!profile)
       getProfileInfo();
     else {
@@ -105,21 +106,31 @@ export default function EditProfile() {
       setSurname(profile.lastName);
       setNameCard(profile.cardFullName);
       setNumberCard(profile.cardNumber);
-      setDateCardM(profile.cardExpireMonth);
-      setDateCardY(profile.cardExpireYear);
+      setDateCardM(profile.cardExpireMonth.toString()); 
+      setDateCardY(profile.cardExpireYear.toString());
       setCvv(profile.cardCVV);
     }
   }, [profile]); //aggiorna i campi con le informazioni
 
   return (
     <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>
-      <StatusBar style="auto"></StatusBar>
-      {name &&
-        <Text style={globalStyles.textNameTitle}>Ciao, {name}!</Text>
-      }
-      {!name &&
-        <Text style={globalStyles.textNameTitle}>Ciao, User!</Text>
-      }
+
+      <StatusBar style="auto" />
+
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity onPress={() => props.onButtonPressed()} style={[globalStyles.backButton, globalStyles.textScreenTitle]}>
+          <Image source={goBackIcon} style={[globalStyles.backButtonIcon]} />
+        </TouchableOpacity>
+        {name &&
+          <Text style={globalStyles.textNameTitle}>Ciao, {name}!</Text>
+        }
+        {!name &&
+          <Text style={globalStyles.textNameTitle}>Ciao, User!</Text>
+        }
+      </View>
+
+
+      
       <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           {/* Campo per il nome */}
@@ -174,7 +185,7 @@ export default function EditProfile() {
               <View style={{ flex: 1, marginRight: 10 }}>
                 <Text style={globalStyles.label}>Mese</Text>
                 <TextInput
-                  style={[globalStyles.input, { textAlign: 'center' }, !dateCardMValid && globalStyles.inputError]}
+                  style={[globalStyles.input, { textAlign: 'left' }, !dateCardMValid && globalStyles.inputError]}
                   editable={editable}
                   onChangeText={text => setDateCardM(text)}
                   onBlur={handleMonthChange}
@@ -185,10 +196,10 @@ export default function EditProfile() {
               <View style={{ flex: 1, marginRight: 10 }}>
                 <Text style={globalStyles.label}>Anno</Text>
                 <TextInput
-                  style={[globalStyles.input, { textAlign: 'center' }, , !dateCardYValid && globalStyles.inputError]}
+                  style={[globalStyles.input, { textAlign: 'left' }, , !dateCardYValid && globalStyles.inputError]}
                   onChangeText={text => setDateCardY(text)}
                   editable={editable}
-                  onBlur={handleYearChange }
+                  onBlur={handleYearChange}
                   value={dateCardY}
                   placeholder="AAAA"
                 />
@@ -196,7 +207,7 @@ export default function EditProfile() {
               <View style={{ flex: 1, marginRight: 10 }}>
                 <Text style={globalStyles.label}>CVV</Text>
                 <TextInput
-                  style={[globalStyles.input, { textAlign: 'center' }, , !cvvValid && globalStyles.inputError]}
+                  style={[globalStyles.input, { textAlign: 'left' }, , !cvvValid && globalStyles.inputError]}
                   onChangeText={text => setCvv(text)}
                   editable={editable}
                   onBlur={handleCvvChange}

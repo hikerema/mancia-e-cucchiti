@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { View, AppState } from 'react-native';
 import { useEffect, useState } from 'react';
 
 // Schermate
@@ -16,6 +16,7 @@ import globalStyles from './styles/global.js'; // Stili
 // Servizi
 import * as Location from 'expo-location'; // Per ottenere la posizione attuale
 import { getSID as RequestSID } from './services/RequestsManager.js'; // Per ottenere il SID
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const [screen, setScreen] = useState('loading'); // Stato per la schermata attuale
@@ -27,7 +28,6 @@ export default function App() {
   const [nav, setNav] = useState(['menu']); // Stato per la lista degli elementi
 
   const getSID = async () => {
-    console.log("App.js | La schermata di " + screen + " inizia la procedura di ottenimento del SID");
     try {
       let sid = await RequestSID();
       setSID(sid);
@@ -53,34 +53,76 @@ export default function App() {
   };
 
   const changeScreen = (s) => {
-    console.log("Cambia stato screen:" + screen + " => " + s);
+    console.log("App.js | Cambia stato screen:" + screen + " => " + s);
     if (nav.includes(s)) {
       const index = nav.indexOf(s);
       setNav(nav.slice(0, index + 1));
     } else {
       setNav([...nav, s]);
     }
-    console.log("Nav: " + nav);
     setScreen(s);
+    AsyncStorage.setItem('currentScreen', s);
+    AsyncStorage.setItem('currentNav', JSON.stringify(nav));
   }; // Cambia la schermata attuale ad s
 
   const details = (item) => {
     setItem(item);
+    AsyncStorage.setItem('currentItem', JSON.stringify(item));
     changeScreen('details');
   }; // Imposta l'item selezionato e cambia la schermata a 'details'
 
   useEffect(() => {
+    const restoreState = async () => {
+      const savedScreen = await AsyncStorage.getItem('currentScreen');
+      const savedNav = await AsyncStorage.getItem('currentNav');
+      const savedItem = await AsyncStorage.getItem('currentItem');
+      if (savedNav) {
+        setNav(JSON.parse(savedNav));
+      }
+      if (savedItem) {
+        setItem(JSON.parse(savedItem));
+      }
+      if (savedScreen && savedScreen !== 'loading') {
+        if (currentLocation !== null) {
+          setScreen(savedScreen);
+        }
+      } else {
+        if (currentLocation !== null) {
+          if (savedScreen === 'loading') {
+            setScreen('menu');
+          }
+        }
+      }
+    };
+
+    restoreState();
+  }, [currentLocation]); // Ripristina lo stato precedente
+  
+  useEffect(() => {
     if (SID !== null) {
       if (screen === 'loading') {
         getCurrentLocation();
-        if (currentLocation !== null) {
-          setScreen('menu');
-        }
       }
     } else {
       getSID();
     }
   }, [SID, screen, currentLocation]);
+
+  useEffect(() => {
+    const handleAppStateChange = async (nextAppState) => {
+      if (nextAppState === 'background' || nextAppState === 'inactive') {
+        await AsyncStorage.setItem('currentScreen', screen);
+        await AsyncStorage.setItem('currentNav', JSON.stringify(nav));
+        await AsyncStorage.setItem('currentItem', JSON.stringify(item));
+      }
+    };
+  
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+  
+    return () => {
+      subscription.remove();
+    };
+  }, [screen]);
 
   if (screen === 'menu') {
     return (
@@ -92,7 +134,7 @@ export default function App() {
   } else if (screen === 'profile') {
     return (
       <View style={globalStyles.container}>
-        <Profile onButtonPressed={() => changeScreen("editProfile")} />
+        <Profile onButtonPressed={(item) => details(item)} goToScreen={(s) => changeScreen(s)} />
         <NavBar activeScreen={screen} onNavigate={changeScreen} />
       </View>
     );
@@ -105,8 +147,7 @@ export default function App() {
   } else if (screen === 'editProfile') {
     return (
       <View style={globalStyles.container}>
-        <EditProfile />
-        <NavBar activeScreen={screen} onNavigate={changeScreen} />
+        <EditProfile onButtonPressed={() => changeScreen(nav.at(-2))}/>
       </View>
     );
   } else if (screen === 'onDelivery') {
