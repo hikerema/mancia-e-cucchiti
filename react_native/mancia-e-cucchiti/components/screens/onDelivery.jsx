@@ -1,22 +1,24 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text} from 'react-native';
 import { useEffect, useState } from 'react';
-import { getProfile, getOrder, getMenuByMid } from '../../services/RequestsManager.js';
-import globalStyles from '../../styles/global.js';
-import goBackIcon from '../../assets/icons/goBack.png';
-import MapView, { Marker, Polyline } from 'react-native-maps';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry.js';
 
+import globalStyles from '../../styles/global.js'; //stili
+
+//Servizzi
+import MapView, { Marker, Polyline } from 'react-native-maps';
+import { getProfile, getOrder, getMenuByMid } from '../../services/RequestsManager.js';
+
+//Icone
 import DroneImage from '../../assets/icons/drone.png';
 import ManImage from '../../assets/icons/man.png';
 import restImage from '../../assets/icons/restaurant.png';
 
-export default function OnDelivery(props) {
-    const [order, setOrder] = useState(null);
-    const [menu, setMenu] = useState(null);
-    var lastOid = null;
-    const [intervalId, setIntervalId] = useState(null);
-    const [currentLocation, setCurrentLocation] = useState(null);
+export default function OnDelivery() {
+    const [order, setOrder] = useState(null); //Stato per l'ordine
+    const [menu, setMenu] = useState(null); //Stato per il menù
+    var lastOid = null; //Ultimo oid dell'utente
+    const [intervalId, setIntervalId] = useState(null); //Stato per l'intervallo di aggiornamento della posizione
+    const [currentLocation, setCurrentLocation] = useState(null); //Stato per la posizione attuale del drone
   
     const fetchLastOid = async () => {
       try {
@@ -25,9 +27,8 @@ export default function OnDelivery(props) {
         console.log("LastOid: ", profile.lastOid);
       } catch (error) {
         console.error("OnDelivery.jsx | Errore durante il recupero dell' LastOid:", error);
-        alert("OnDelivery.jsx | Errore durante il recupero dell' LastOid:"); //Messaggio di errore da migliorare
       }
-    };
+    }; //Metodo per ottenere l'ultimo oid dell'utente
   
     const fetchOrder = async (oid) => {
       if (oid) {
@@ -37,10 +38,9 @@ export default function OnDelivery(props) {
           setOrder(r);
         } catch (error) {
           console.error("OnDelivery.jsx | Errore durante il recupero dell'ordine:", error);
-          alert("OnDelivery.jsx | Errore durante il recupero dell'ordine:"); //Messaggio di errore da migliorare
         }
       }
-    };
+    }; //Metodo per ottenere l'ordine tramite il requestManager
   
     const fetchMenu = async () => {
       if (order) {
@@ -49,14 +49,13 @@ export default function OnDelivery(props) {
           setMenu(menu);
         } catch (error) {
           console.error("OnDelivery.jsx | Errore durante il recupero del menù:", error);
-          alert("OnDelivery.jsx | Errore durante il recupero del menù:"); //Messaggio di errore da migliorare
         }
       }
-    };
+    }; //Metodo per ottenere il menù tramite il requestManager
 
     function getLastOid() {
         return lastOid;
-    }
+    } //Metodo per ottenere l'ultimo oid dell'utente
 
     const updateMap = async () => {
         console.log("Aggiornamento posizione attuale");
@@ -66,33 +65,41 @@ export default function OnDelivery(props) {
         } else {
           console.error("Nessun ordine disponibile");
         }
-      };
-    
-      useEffect(() => {
-        fetchLastOid();
-      }, []);
-    
-      useEffect(() => {
-        if (lastOid) {
-          fetchOrder(lastOid);
-        }
-      }, [lastOid]);
-    
-      useEffect(() => {
-        if (order) {
-          fetchMenu();
-        }
-      }, [order]);
-    
+    };
 
-      useEffect(() => {
-        if (order?.currentPosition) {
-          console.log("Posizione attuale disponibile");
-          setCurrentLocation(order.currentPosition);
-        } else {
-          updateMap();
-        }
-      }, [order]);
+    const formatTime = (timestamp) => {
+      const date = new Date(timestamp);
+      date.setHours(date.getHours());
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    }; ///Metodo per formattare l'orario
+    
+    useEffect(() => {
+      fetchLastOid();
+    }, []);
+  
+    useEffect(() => {
+      if (lastOid) {
+        fetchOrder(lastOid);
+      }
+    }, [lastOid]);
+  
+    useEffect(() => {
+      if (order) {
+        fetchMenu();
+      }
+    }, [order]);
+  
+
+    useEffect(() => {
+      if (order?.currentPosition) {
+        console.log("Posizione attuale disponibile");
+        setCurrentLocation(order.currentPosition);
+      } else {
+        updateMap();
+      }
+    }, [order]);
     
     useEffect(() => {
       if (!intervalId) {
@@ -108,14 +115,6 @@ export default function OnDelivery(props) {
         }
       };
     }, [intervalId]);
-
-    const formatTime = (timestamp) => {
-      const date = new Date(timestamp);
-      date.setHours(date.getHours());
-      const hours = date.getHours().toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      return `${hours}:${minutes}`;
-    };
 
     return (
       <View style={globalStyles.screenContainer}>

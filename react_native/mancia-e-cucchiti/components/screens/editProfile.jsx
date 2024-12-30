@@ -1,79 +1,48 @@
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import globalStyles from '../../styles/global.js';
 import { useEffect, useState } from 'react';
 
-import { updateUserInfo, getProfile } from '../../services/RequestsManager.js';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry.js';
+import globalStyles from '../../styles/global.js'; //stili
+
+import { updateUserInfo, getProfile } from '../../services/RequestsManager.js'; //servizi
 
 export default function EditProfile() {
+  //dati che verranno inseriti dall'utente e inviati al server
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
-
-  const [nameCard, setNameCard] = useState('');
+  const [nameCard, setNameCard] = useState(''); //nome e cognome sulla carta in campo singolo
   const [numberCard, setNumberCard] = useState('');
-  const [dateCardY, setDateCardY] = useState('');
-  const [dateCardM, setDateCardM] = useState('');
+  const [dateCardY, setDateCardY] = useState(''); //anno di scadenza
+  const [dateCardM, setDateCardM] = useState(''); //mese di scadenza
+  const [cvv, setCvv] = useState(''); //codice di sicurezza
 
-  const [cvv, setCvv] = useState('');
-
+  //contorlli di validità dei campi
   const [numberCardValid, setnumberCardValid] = useState(true);
   const [dateCardYValid, setdateCardYValid] = useState(true);
   const [dateCardMValid, setdateCardMValid] = useState(true);
   const [cvvValid, setCvvValid] = useState(true);
 
+  //stato per la gestione della modifica del profilo
   const [edit, setEdit] = useState(true);
   const [editable, setEditable] = useState(false);
 
+  //stato per il recupero delle informazioni del profilo dal server
   const [profile, setProfile] = useState(null);
-
-  const handleSaveProfile = async () => {
-    try {
-      if (!name) {
-        Alert.alert("Errore", "Nome obbligatorio");
-        return;
-      }
-      if (!surname) {
-        Alert.alert("Errore", "Cognome obbligatorio");
-        return;
-      }
-      if (!nameCard || !numberCard || !dateCardM || !dateCardY || !cvv) {
-        Alert.alert("Errore", "Dati della carta incompleti");
-        return;
-      }
-
-      const userInfo = {
-        name,
-        surname,
-        paymentMethod: {
-          nameCard,
-          numberCard,
-          dateCardM,
-          dateCardY,
-          cvv,
-        },
-      };
-
-      console.log("Invio dati aggiornati:", userInfo);
-
-      Alert.alert("Successo", "Il profilo è stato aggiornato con successo!");
-    } catch (error) {
-      console.error("Errore durante l'aggiornamento del profilo:", error);
-      Alert.alert("Errore", "Non è stato possibile aggiornare il profilo.");
-    }
-  };
 
   // Verifica che il numero della carta sia lungo 16 caratteri
   const handleNumberCardChange = (text) => {
     setnumberCardValid(numberCard.length === 16 || numberCard == '');
   };
-  // Verifica che la data di scadenza sia nel formato MM/AA (4 cifre)
+
+  // Verifica che l'anno di scadenza sia di 4 cifre
   const handleYearChange = () => {
     setdateCardYValid(dateCardY.length === 4 || dateCardY == '');
   };
 
+  // Verifica che il mese di scadenza sia compreso tra 1 e 12
   const handleMonthChange = () => {
-    setdateCardMValid((dateCardM.length === 2 && dateCardM >= 1 && dateCardM <= 12) || dateCardM == '');
+    month = parseInt(dateCardM);
+    setdateCardMValid((month >= 1 && month <= 12) || dateCardM == '');
   };
 
   // Verifica che il CVV sia di 3 cifre
@@ -81,16 +50,19 @@ export default function EditProfile() {
     setCvvValid(cvv.length === 3 || cvv == '');
   };
 
-  let intervalId;
   onLoad = () => {
     console.log("Componente montato");
     getProfileInfo();
-  }
+  } //all'apertura del componente richiedo le informazioni del profilo
 
   onUnload = () => {
     console.log("Componente smontato");
-    clearInterval(intervalId);
   }
+
+  useEffect(() => {
+    onLoad()
+    return onUnload;
+  }, []);
 
   const getProfileInfo = async () => {
     try {
@@ -99,8 +71,7 @@ export default function EditProfile() {
       console.error("Errore durante il recupero delle informazioni del profilo:", error);
     }
     setName(profile.firstName);
-    
-  }
+  } //richiede le informazioni del profilo trami il RequestManager e imposto lo stato del nome
 
   const putUserInfoAsync = async () => {
     try {
@@ -118,17 +89,12 @@ export default function EditProfile() {
       console.error("Profile.jsx | Errore durante il recupero dei menù:", error);
       alert("Ci scusiamo, si è verificato un errore durante il recupero dei menù"); //Messaggio di errore da migliorare
     }
-  }
+  } //invia le informazioni del profilo al server tramite il RequestManager
 
   const invertEdit = () => {
     setEditable(!editable);
     setEdit(!edit);
-  }
-
-  useEffect(() => {
-    onLoad()
-    return onUnload;
-  }, []);
+  } //inverte lo stato di edit e editable
 
   useEffect(() => {
     console.log("Name:", name);
@@ -143,7 +109,7 @@ export default function EditProfile() {
       setDateCardY(profile.cardExpireYear);
       setCvv(profile.cardCVV);
     }
-  }, [profile]);
+  }, [profile]); //aggiorna i campi con le informazioni
 
   return (
     <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>

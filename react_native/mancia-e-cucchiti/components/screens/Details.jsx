@@ -18,25 +18,22 @@ export default function Details({item, location, ...props}) {
   const fetchImage = async () => {
     const image = await getMenuImage(item.mid, item.imageVersion);
     setImage(image);
-  }
+  } //Richiede l'immagine del menù tramite il RequestManager
 
   const fetchDetails = async () => {
     const details = await getMenuDetails(item);
     setDetails(details);
-  }
+  } //Richiede i dettagli del menù tramite il RequestManager
 
   onLoad = () => {
       console.log("Componente Details montato");
       fetchImage();
       fetchDetails();
-      
-  }
-
+  } //all'apertura del componente chiedo i dettagli e l'immagine del menù
   onUnload = () => {
     console.log("Componente Details smontato");
   }
-  
-  // const 
+
   useEffect(() => {
     onLoad()
     return onUnload;
@@ -59,7 +56,7 @@ export default function Details({item, location, ...props}) {
         },
       ]
     );
-  };
+  }; //Mostra un alert per confermare l'ordine
 
   const buyMenu = async (item) => {
     const isCompleted = await isProfileCompleted()
@@ -70,17 +67,16 @@ export default function Details({item, location, ...props}) {
           props.onOrderPress();
         }
         if(response.status === 409) {
-          alert("Ordine già presente: non è possibile effettuare l'ordine");
+          alert("Un'altro ordine è ancora in corso di consegna, non puoi effettuare un altro ordine");
         }
 
       } catch (error) {
         console.log("Errore nel menù da comprare " + error);
       }
-      //vai al dettaglio ordine
     } else {
       alert("Completa il tuo profilo prima di effettuare un ordine");
     }
-  }
+  } //Richiede l'acquisto del menù tramite il RequestManager al soddisfacimento di alcune condizioni
 
   return (
     <View style={[globalStyles.screenContainer, globalStyles.backgroundLight]}>

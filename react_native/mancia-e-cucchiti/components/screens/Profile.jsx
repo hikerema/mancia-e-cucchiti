@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import globalStyles from '../../styles/global.js';
 import { useEffect, useState } from 'react';
 
+import globalStyles from '../../styles/global.js'; //Stili
+
+//Servizzi
 import { getProfile, getOrder, getMenuByMid, getMenuImage} from '../../services/RequestsManager.js';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry.js';
-import editProfile from './editProfile.jsx';
 
 
 export default function Profile({...props}) {

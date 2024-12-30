@@ -9,7 +9,6 @@ import MenuItem from '../MenuItem.jsx';//Componente per la visualizzazione di un
 //Servizzi
 import { getMenus } from '../../services/RequestsManager.js';
 
-
 export default function Menu({location, ...props }) {
   const [menus, setMenus] = useState([]); //Stato per i menù, slvo i menu che verranno visualizzati
   const [intervalId, setIntervalId] = useState(null); //Stato per l'intervallo di aggiornamento dei menù  
