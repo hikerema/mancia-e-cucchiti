@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import globalStyles from '../../styles/global.js';
 import { useEffect, useState } from 'react';
 

@@ -157,9 +157,7 @@ export const getUID = async () => {
     }
 } //Cerca l'UID tramite lo StorageManager, se non lo trova chiama getSID e lo restituisce
 
-export const updateUserInfo = async (name, surname, nameCard, numberCard, dateCard, cvv) => {
-    month = dateCard.split("/")[0];
-    year = dateCard.split("/")[1];
+export const updateUserInfo = async (name, surname, nameCard, numberCard, month, year, cvv) => {
     try {
         // Recupera SID e UID
         const SID = await getSID();

@@ -5,8 +5,6 @@ import { useEffect, useState } from 'react';
 import Loading from './components/screens/loading'; // Schermata di caricamento iniziale
 import Menu from './components/screens/Menu';
 import Profile from './components/screens/Profile';
-import OrderState from './components/screens/OrderState';
-import Orders from './components/screens/Orders';
 import Details from './components/screens/Details';
 import EditProfile from './components/screens/editProfile';
 import OnDelivery from './components/screens/onDelivery.jsx';
@@ -23,9 +21,10 @@ export default function App() {
   const [screen, setScreen] = useState('loading'); // Stato per la schermata attuale
   const [item, setItem] = useState(null); // Stato per sapere quale menu è stato selezionato (per la schermata di dettagli)
   const [currentLocation, setCurrentLocation] = useState(null); // Stato per la posizione attuale
-  const [lastScreen, setLastScreen] = useState(null); // Stato per la schermata precedente
   const [SID, setSID] = useState(null);
   const [intervalId, setIntervalId] = useState(null);
+
+  const [nav, setNav] = useState(['menu']); // Stato per la lista degli elementi
 
   const getSID = async () => {
     console.log("App.js | La schermata di " + screen + " inizia la procedura di ottenimento del SID");
@@ -55,7 +54,13 @@ export default function App() {
 
   const changeScreen = (s) => {
     console.log("Cambia stato screen:" + screen + " => " + s);
-    setLastScreen(screen);
+    if (nav.includes(s)) {
+      const index = nav.indexOf(s);
+      setNav(nav.slice(0, index + 1));
+    } else {
+      setNav([...nav, s]);
+    }
+    console.log("Nav: " + nav);
     setScreen(s);
   }; // Cambia la schermata attuale ad s
 
@@ -91,17 +96,10 @@ export default function App() {
         <NavBar activeScreen={screen} onNavigate={changeScreen} />
       </View>
     );
-  } else if (screen === 'orders') {
-    return (
-      <View style={globalStyles.container}>
-        <Orders />
-        <NavBar activeScreen={screen} onNavigate={changeScreen} />
-      </View>
-    );
   } else if (screen === 'details') {
     return (
       <View style={globalStyles.container}>
-        <Details location={currentLocation} item={item} onButtonPressed={() => changeScreen(lastScreen)} onOrderPress={() => changeScreen("onDelivery")} />
+        <Details location={currentLocation} item={item} onButtonPressed={() => changeScreen(nav.at(-2))} onOrderPress={() => changeScreen("onDelivery")} />
       </View>
     );
   } else if (screen === 'editProfile') {
@@ -115,6 +113,7 @@ export default function App() {
     return (
       <View style={globalStyles.container}>
         <OnDelivery onButtonPressed={() => details(item)} />
+        <NavBar activeScreen={screen} onNavigate={changeScreen} />
       </View>
     );
   } else {

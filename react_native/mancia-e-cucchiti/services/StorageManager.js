@@ -145,6 +145,7 @@ export default class StorageManager {
       console.error("Errore durante l'aggiornamento dello stato dell'ordine:", error);
     }
   }
+  
   async getDeliveredOrders() {
     try {
       const query = `SELECT * FROM Orders WHERE OrderStatus = 1 ORDER BY OrderDate DESC`;

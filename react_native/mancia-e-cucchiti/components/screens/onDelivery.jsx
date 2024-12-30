@@ -7,6 +7,10 @@ import goBackIcon from '../../assets/icons/goBack.png';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry.js';
 
+import DroneImage from '../../assets/icons/drone.png';
+import ManImage from '../../assets/icons/man.png';
+import restImage from '../../assets/icons/restaurant.png';
+
 export default function OnDelivery(props) {
     const [order, setOrder] = useState(null);
     const [menu, setMenu] = useState(null);
@@ -80,12 +84,13 @@ export default function OnDelivery(props) {
         }
       }, [order]);
     
+
       useEffect(() => {
         if (order?.currentPosition) {
           console.log("Posizione attuale disponibile");
           setCurrentLocation(order.currentPosition);
         } else {
-          console.error("Posizione attuale non disponibile");
+          updateMap();
         }
       }, [order]);
     
@@ -104,74 +109,105 @@ export default function OnDelivery(props) {
       };
     }, [intervalId]);
 
+    const formatTime = (timestamp) => {
+      const date = new Date(timestamp);
+      date.setHours(date.getHours());
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    };
+
     return (
-        <View style={globalStyles.screenContainer}>
-            <StatusBar style="auto" />
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableOpacity onPress={() => props.onButtonPressed()} style={[globalStyles.backButton, globalStyles.textScreenTitle]}>
-                    <Image source={goBackIcon} style={[globalStyles.backButtonIcon]} />
-                </TouchableOpacity>
-                <Text style={globalStyles.textScreenTitle}>Ordine in consegna</Text>
-            </View>
-            {currentLocation && (
-                <View style={globalStyles.mapContainer}>
-                    <MapView
-                        style={globalStyles.map}
-                        region={{
-                            latitude: currentLocation.lat,
-                            longitude: currentLocation.lng,
-                            latitudeDelta: 0.01,
-                            longitudeDelta: 0.01,
-                        }}
-                    >
-                        <Marker
-                            coordinate={{
-                                latitude: currentLocation.lat,
-                                longitude: currentLocation.lng,
-                            }}
-                            title="Posizione attuale"
-                            description={`Orario presunto di arrivo: ${order?.estimatedArrivalTime || "N/A"}`}
-                        />
-
-                        <Marker
-                            coordinate={{
-                                latitude: order?.deliveryLocation.lat,
-                                longitude: order?.deliveryLocation.lng,
-                            }}
-                            title="Posizione attuale"
-                            description={`Orario presunto di arrivo: ${order?.estimatedArrivalTime || "N/A"}`}
-                        />
-
-                        <Polyline
-                            coordinates={
-                                [{
-                                    latitude: order?.deliveryLocation.lat,
-                                    longitude: order?.deliveryLocation.lng,
-                                },
-                                {
-                                    latitude: currentLocation.lat,
-                                    longitude: currentLocation.lng,
-                                }]
-                            }
-                            strokeColor="green"
-                            strokeWidth={2}
-                        />
-                    </MapView>
-                </View>
-            )}
-            {menu ? (
-                <View style={globalStyles.container}>
-                    <Text style={globalStyles.textScreenSubtitle}>Riepilogo del ordine:</Text>
-                    <Text style={globalStyles.textOrderDetailsTitle}>Orario presunto di arrivo:</Text>
-                    <Text style={globalStyles.textOrderDetails}>{order?.estimatedArrivalTime || "N/A"}</Text>
-                    <Text style={globalStyles.textOrderDetailsTitle}>{menu.name}</Text>
-                    <Text style={globalStyles.textOrderDetails}>{menu.shortDescription}</Text>
-                </View>
-            ) : (
-                <View style={globalStyles.container}>
-                    <Text>Non ci sono dati del menu disponibili.</Text>
-                </View>
-            )}
+      <View style={globalStyles.screenContainer}>
+        <StatusBar style="auto" />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={globalStyles.textScreenTitle}>Ordine in consegna</Text>
         </View>
+        {currentLocation && (
+          <View style={globalStyles.mapContainer}>
+            <MapView
+              style={globalStyles.map}
+              region={{
+                latitude: currentLocation.lat,
+                longitude: currentLocation.lng,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }}
+            >
+              <Marker
+                coordinate={{
+                  latitude: currentLocation.lat,
+                  longitude: currentLocation.lng,
+                }}
+                title="Posizione attuale"
+                description={`Orario presunto di arrivo: ${order?.estimatedArrivalTime ? formatTime(order.estimatedArrivalTime) : "N/A"}`}
+                image={DroneImage}
+              />
+
+              <Marker
+                coordinate={{
+                  latitude: order?.deliveryLocation.lat,
+                  longitude: order?.deliveryLocation.lng,
+                }}
+                title="Posizione di consegna"
+                description={`Orario presunto di arrivo: ${order?.estimatedArrivalTime ? formatTime(order.estimatedArrivalTime) : "N/A"}`}
+                image = {order?.status !== 'COMPLETED' ? ManImage : DroneImage}
+              />
+
+              <Marker
+                coordinate={{
+                  latitude: menu?.location.lat,
+                  longitude: menu?.location.lng,
+                }}
+                title="Posizione di partenza"
+                description={`Orario presunto di arrivo: ${order?.estimatedArrivalTime ? formatTime(order.estimatedArrivalTime) : "N/A"}`}
+                image={restImage}
+              />
+
+              <Polyline
+                coordinates={
+                  [{
+                    latitude: menu?.location.lat,
+                    longitude: menu?.location.lng,
+                  },
+                  {
+                    latitude: order?.deliveryLocation.lat,
+                    longitude: order?.deliveryLocation.lng,
+                  }]
+                }
+                strokeColor="#e68231"
+                strokeWidth={2}
+              />
+            </MapView>
+          </View>
+        )}
+        {menu ? (
+          <View style={globalStyles.container}>
+            <Text style={globalStyles.textScreenSubtitle}>Riepilogo del ordine:</Text>
+            {order?.status !== 'COMPLETED' && (
+              <>
+                <Text style={globalStyles.textOrderDetailsTitle}>Orario presunto di arrivo:</Text>
+                <Text style={globalStyles.textOrderDetails}>{order?.expectedDeliveryTimestamp ? formatTime(order.expectedDeliveryTimestamp) : 'N/A'}</Text>
+              </>
+            )}
+            {order?.status === 'COMPLETED' && (
+              <>
+                <Text style={globalStyles.textOrderDetailsTitle}>Orario di arrivo:</Text>
+                <Text style={globalStyles.textOrderDetails}>{order?.deliveryTimestamp ? formatTime(order.deliveryTimestamp) : 'N/A'}</Text>
+              </>
+            )}
+
+            <Text style={globalStyles.textOrderDetailsTitle}>Stato dell'ordine:</Text>
+            <Text style={globalStyles.textOrderDetails}>{order?.status === 'COMPLETED' ? 'consegnato' : 'in consegna'}</Text>
+            
+            <Text style={globalStyles.textOrderDetailsTitle}>{menu.name}</Text>
+            <Text style={globalStyles.textOrderDetails}>{menu.shortDescription}</Text>
+          </View>
+        ) : (
+          <View style={globalStyles.container}>
+            <Text style={globalStyles.textPrimary}>Stiamo caricando i dati del tuo ordine</Text>
+          </View>
+        )}
+      </View>
     );
 }
