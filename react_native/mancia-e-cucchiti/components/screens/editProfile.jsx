@@ -106,8 +106,8 @@ export default function EditProfile(props) {
       setSurname(profile.lastName);
       setNameCard(profile.cardFullName);
       setNumberCard(profile.cardNumber);
-      setDateCardM(profile.cardExpireMonth.toString()); 
-      setDateCardY(profile.cardExpireYear.toString());
+      setDateCardM(profile.cardExpireMonth?.toString()); 
+      setDateCardY(profile.cardExpireYear?.toString());
       setCvv(profile.cardCVV);
     }
   }, [profile]); //aggiorna i campi con le informazioni
