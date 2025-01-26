@@ -1,4 +1,4 @@
-# Progetto di Mobile Computing - **Mangia e Cucchiti**
+# CAMBIAMENTI IMPORTANTI SONO STATI APPORTATI *Leggere attentamente*
 
 Repository privata del progetto d'esame di **Agnese Marabello** ([GitHub](https://github.com/agnesemarabello)) e **Emanuele Moro** ([GitHub](https://github.com/hikerema)).
 
