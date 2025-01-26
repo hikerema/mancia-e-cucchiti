@@ -1,4 +1,4 @@
-# CAMBIAMENTI IMPORTANTI sono stati apportati alle dinamiche di produzione del progetto * si raccomanda di leggere attentamente*
+# CAMBIAMENTI IMPORTANTI sono stati apportati alle dinamiche di produzione del progetto *si raccomanda di leggere attentamente*
 
 A seguito di avvenimenti personali tra i membri del gruppo di sviluppo, è stato deciso unilateralmente di interrompere il lavoro di gruppo. 
 
