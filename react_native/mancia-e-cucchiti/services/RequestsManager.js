@@ -1,3 +1,7 @@
+/***************************************************
+** Ciao Agnese il codice che cherchi è a rigo 107 **
+***************************************************/
+
 import axios from 'axios';
 import StorageManager from './StorageManager.js';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
@@ -100,21 +104,25 @@ export const getMenuDetails = async (menu) => {
     }
 }
 
+/* SI QUESTO È IL CODICE CHE CERCAVI ⬇️*/
 export const getMenuByMid = async (mid, lat, lng) => {
     try {
         const SID = await getSID();
-        const response = await axios.get(`${BASE_URL}/menu/${mid}`, {
-            params: {
-                mid: mid,
-                lat: lat,
-                lng: lng,
-                sid: SID
-            },
+        console.log('SID retrieved:', SID);
+        console.log('Fetching menu with mid:', mid, 'lat:', lat, 'lng:', lng);
+        const response = await fetch(`${BASE_URL}/menu/${mid}?lat=${lat}&lng=${lng}&sid=${SID}`, {
             headers: {
                 'Accept': 'application/json'
             }
         });
-        return response.data;
+        console.log('Response status:', response.status);
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Response data:', data);
+            return data;
+        } else {
+            throw new Error("RM | Errore durante il recupero dei dettagli del menù");
+        }
     } catch (error) {
         console.error("RM | Errore durante il recupero dei dettagli del menù:", error);
         throw error;
