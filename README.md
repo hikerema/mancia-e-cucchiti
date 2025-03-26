@@ -11,3 +11,7 @@
    git clone https://github.com/hikerema/mancia-e-cucchiti
    ```
 2. lo sai gia fare
+3. potrebbe esserre necessario
+   ```sh
+   npm install
+   ```
