@@ -1,7 +1,3 @@
-/***************************************************
-** Ciao Agnese il codice che cherchi è a rigo 107 **
-***************************************************/
-
 import axios from 'axios';
 import StorageManager from './StorageManager.js';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
@@ -104,8 +100,8 @@ export const getMenuDetails = async (menu) => {
     }
 }
 
-/* SI QUESTO È IL CODICE CHE CERCAVI ⬇️*/
-export const getMenuByMid = async (mid, lat, lng) => {
+
+export const getMenuByMid = async (mid, lat, lng) => { //MIAOOOOOO MIAOOOOOO MIAOOO 🐈 sono Agnese e mi piacciono i gattini
     try {
         const SID = await getSID();
         console.log('SID retrieved:', SID);

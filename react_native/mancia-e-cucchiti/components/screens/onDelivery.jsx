@@ -116,7 +116,7 @@ export default function OnDelivery() {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={globalStyles.textScreenTitle}>Ordine in consegna</Text>
         </View>
-        {currentLocation && (
+        {currentLocation && menu && (
           <View style={globalStyles.mapContainer}>
             <MapView
               style={globalStyles.map}
